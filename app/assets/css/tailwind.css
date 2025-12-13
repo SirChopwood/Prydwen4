@@ -1,0 +1,82 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-unimportant";
+@plugin 'tailwind-scrollbar';
+
+@theme {
+    --font-cabin: 'Cabin', sans-serif;
+    --font-jetbrains: 'JetBrains Mono', sans-serif;
+    --color-primary: #ffbb00;
+    --color-secondary: #c940af;
+}
+
+@utility project-md {
+    @apply w-full max-w-full grow flex flex-col justify-center justify-items-center font-normal
+    font-cabin text-neutral-200 text-lg
+
+    prose-h1:text-white prose-h1:stripes-secondary prose-h1:font-jetbrains prose-h1:border-b-2 prose-h1:border-b-secondary prose-h1:pl-2 prose-h1:py-1 prose-h1:text-lg prose-h1:font-bold
+
+    prose-h2:text-primary prose-h2:stripes prose-h2:pl-2 prose-h2:py-1 prose-h2:text-3xl prose-h2:font-bold
+
+    prose-h3:text-white prose-h3:pl-2 prose-h3:py-1 prose-h3:text-xl prose-h3:font-bold prose-h3:underline prose-h3:decoration-primary
+
+    prose-strong:text-white
+
+    prose-ol:marker:fill-secondary
+
+    prose-ul:marker:fill-secondary
+
+    prose-a:no-underline prose-a:text-primary
+
+    prose-p:m-2
+
+    prose-code:codeblock
+
+    prose-img:rounded-lg prose-img:border-2 prose-img:border-neutral-700 prose-img:max-h-80 prose-img:w-auto prose-img:justify-self-center prose-img:self-center prose-img:mb-4
+}
+
+@utility stripes {
+    background: repeating-linear-gradient(
+            -45deg,
+            #262626,
+            #262626 10px,
+            #171717 10px,
+            #171717 20px
+    );
+}
+@utility stripes-primary {
+    background: repeating-linear-gradient(
+            -45deg,
+            #916b00,
+            #916B00 10px,
+            #594613 10px,
+            #594613 20px
+    );
+}
+@utility stripes-secondary {
+    background: repeating-linear-gradient(
+            -45deg,
+            #5c2951,
+            #5C2951FF 10px,
+            #3e1736 10px,
+            #3e1736 20px
+    );
+}
+@utility stripes-warning {
+    background: repeating-linear-gradient(
+            -45deg,
+            rgba(179, 23, 23, 0.5),
+            rgba(179, 23, 23, 0.5) 10px,
+            rgba(103, 0, 0, 0.5) 10px,
+            rgba(103, 0, 0, 0.5) 20px
+    );
+    box-shadow: 0 0 50px 0 rgba(179, 23, 23, 0.5);
+}
+
+@utility codeblock {
+    @apply bg-neutral-800 outline outline-1 outline-neutral-700 rounded-sm px-1 py-0 md:px-2 md:py-0.5 text-neutral-400 font-jetbrains
+}
+
+@utility tooltip {
+    @apply invisible absolute rounded-md bg-neutral-900 border-2 border-secondary inset-0 p-0.5 h-fit translate-y-8 hover:visible hover:z-50
+}

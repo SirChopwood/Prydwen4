@@ -1,0 +1,52 @@
+export default defineEventHandler(async (event) => {
+    const context = await validateRequest(event, z.strictObject({
+        "channel": TwitchChannel.optional(),
+        "channels": z.array(TwitchChannel).optional(),
+        "force": z.boolean().optional(),
+        "sessionId": z.number().optional(),
+    }), false)
+
+    let activeSessions: Array<RRM_Session> = []
+    if (context.body.channel && !context.body.force) {
+        activeSessions = await fetchSessionByChannel(context.body.channel, true)
+    } else if (context.body.channels && !context.body.force) {
+        let sessionRecord: Record<string, RRM_Session> = {}
+        for await (const channel of context.body.channels) {
+            const session = await fetchSessionByChannel(channel)
+            if (session && session[0]) {
+                sessionRecord[channel.name] = session[0]
+            }
+        }
+        return sessionRecord
+    } else if (context.body.sessionId) {
+        let sessionFound = await fetchSessionById(context.body.sessionId, true)
+        if (sessionFound) {
+            activeSessions.push(sessionFound)
+        }
+    } else {
+        const userSession = await fetchUserSession(event)
+        const modChannels = await fetchPermittedChannels(Number(userSession.user!.id), userSession.user!.display_name, userSession.secure!.access_token)
+        if (modChannels.length > 0) {
+
+            // Iterate through all modded channels
+            for (let channel of modChannels) {
+                let channelSession = await fetchSessionByChannel(channel)
+                if (channelSession.length > 0) {
+                    let sessionUnique = true
+                    // Make sure not to add duplicate entries
+                    for (let activeSession of activeSessions) {
+                        if (activeSession.id === channelSession[0].id) {
+                            sessionUnique = false
+                        }
+                    }
+                    if (sessionUnique) {
+                        activeSessions.push(channelSession[0])
+                    }
+                }
+            }
+        } else {
+            throw createError({statusCode: 401, statusMessage: "User is not authenticated."})
+        }
+    }
+    return activeSessions
+})

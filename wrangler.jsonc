@@ -1,0 +1,11 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    // if hub.db is enabled
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "prydwen",
+            "database_id": "0aaa1682-dbee-49af-a1d8-68299824e654"
+        }
+    ]
+}
