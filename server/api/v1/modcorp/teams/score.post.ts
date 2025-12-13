@@ -1,3 +1,5 @@
+import {eq} from "drizzle-orm";
+
 export default defineEventHandler(async (event) => {
     const context = await validateRequest(event, z.strictObject({
         "token": z.string(),
