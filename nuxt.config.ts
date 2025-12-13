@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import * as trace_events from "node:trace_events";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -16,6 +17,11 @@ export default defineNuxtConfig({
     "/rrm/**": {ssr: false}
   },
   nitro: {
+    preset: "cloudflare-durable",
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    },
     experimental: {
       openAPI: true,
       websocket: true
