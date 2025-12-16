@@ -21,11 +21,11 @@ For this project, I spent a large amount of time using the `Geometry Script` plu
 
 The first prototype was a simple box room made out of 5 cubes (4 walls and a floor). With this I had a singular mesh that I could make operations on. For example, cutting out holes for windows and doors. While this is a rather trivial task to do in other programs, the achievement came from getting this to function through pure blueprint without external libraries.
 
-<img src="/images/projects/adv_guild_manager/geoscript_demo1.png" alt="">
+![Geometry Script Demo 1](/images/projects/adv_guild_manager/geoscript_demo1.png)
 
 I created a `Data Asset` alongside some variables on the blueprints themselves to expose controls to the developer. Things such as meshes, colours, sizes etc. could easily be controlled without needing to change them in an external package. Additionally, this would be useful later on in the project if we had the space to add room building to the player as we could hotswap out preset room designations when they're planning their builds.
 
-<img src="/images/projects/adv_guild_manager/geoscript_demo2.png" alt="">
+![Geometry Script Demo 2](/images/projects/adv_guild_manager/geoscript_demo2.png)
 
 With the room bounds set and a rough prototype signed off by my university lecturer, It was time to add in the meshes from the room data assets. This began by copying the data of an existing `Static Mesh` into the new `Dynamic Mesh`. From here i could apply any transforms onto it before using the equivalent of the `Array` modifier from Blender to create a chain of meshes. Repeating this logic a few times and I could generate walls and floors as before, but now more detailed than a cube.
 
@@ -34,17 +34,19 @@ With the room bounds set and a rough prototype signed off by my university lectu
 2. For an unknown reason, a boolean cut mesh does not interact well with dynamic navmesh generation. It was for this reason that I had to set up our doors in the project to use Navmesh Link Proxies in order to artificially bridge the gap.
 3. Generated meshes had two sides to it. These were useful for exterior facing walls as it meant that they would be visible from either side. Unfortunately the interior walls would clip through each other, rendering things like pillars on the interiors of rooms that shouldn't have them. The solution here was to apply another subtraction boolean to the mesh, using any adjacent room's bounding box as the mask. This would cut away any mesh that stuck into said adjacent rooms. (before and after shown below)
 
-<div class="project-gallery">
-    <img src="/images/projects/adv_guild_manager/geoscript_demo3.png" alt="">
-    <img src="/images/projects/adv_guild_manager/geoscript_demo4.png" alt="">
-</div>
+
+::gallery{scrolling="false"}
+![Geometry Script Demo 3](/images/projects/adv_guild_manager/geoscript_demo3.png)
+
+![Geometry Script Demo 4](/images/projects/adv_guild_manager/geoscript_demo4.png)
+::
 
 At this point the performance had become **significantly** worse. The game would stutter every time the scene updated and would hang for seconds at time if any major change occurred. It did not take much searching to notice it would occur whenever the rooms would regenerate. After trial and error with removing specific aspects to see what caused it, it was revealed to be Boolean operations. Any time I would cut a mesh up, it would become significantly more intensive. Now if this was purely for an editor tool, this would have sufficed. But due to the player being able to make changes at runtime, it needed to function during gameplay and despite multiple attempts to simplify and reduce the number of operations being done, it seemed that the engine at this moment in time is simply not cut out to handle it.
 
 ### The solution
 With days remaining on the project and no feasible solution in sight, the feature had to be changed. It was at this point that we as a team had agree to use a backup solution. This involved using lines of individual static mesh components. For the game demo this functioned fine, however any long term gameplay would have suffered from the performance hit it induces from the high numbers found in the game (We were already easily reach 1000+ meshes just for walls in testing).
 
-<img src="/images/projects/adv_guild_manager/geoscript_demo5.png" alt="">
+![Geometry Script Demo 5](/images/projects/adv_guild_manager/geoscript_demo5.png)
 
 
 # Chapter 2

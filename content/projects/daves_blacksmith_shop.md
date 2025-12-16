@@ -21,7 +21,7 @@ hidden: "false"
 # Introduction
 In the summer of 2025, myself and a few friends decided to take on a game jam. We settled on the [Do You WANNA Jam](https://itch.io/jam/do-you-wanna-jam-2025), spending one week to create an experience based around the theme of "PATCH IT UP".
 
-<img src="/images/projects/daves_blacksmith_shop/dbs1.png" alt=""/>
+![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs1.png)
 
 # Sprites & Textures
 ## Bringing life and soul to a pixel world.
@@ -29,11 +29,11 @@ During the jam, I took a lead on the visual style of the project, with many grou
 
 Using these concepts I was able to go ahead and recreate them in Photoshop with a singular palette and with the different layers needed for use ingame. Initially this consisted of some walls and floors made of materials like stone and wood. 
 
-<img src="/images/projects/daves_blacksmith_shop/dbs3.png" alt=""/>
+![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs3.png)
 
 After getting a base foundation and style set from those, I pivoted to the sprites for the items themselves. I used greyscale base sprites with colours applied at runtime to minimise the number of sprites we'd need to create while enabling the other members of the team to quickly add new things to the game by simply changing a variable. This is best shown with the different metals, all sharing their bases.
 
-<img src="/images/projects/daves_blacksmith_shop/dbs2.png" alt=""/>
+![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs2.png)
 
 # Programming
 ## Items, Items and more Items.
@@ -42,17 +42,17 @@ For my programming contributions, I worked on the item system of the game. This 
 
 To begin with, I created a list of different item types we'd need. Collapsing this list into a smaller set of classes that could be used to construct them. Using inheritance I'd only end up needing three:
 
-``Generic Items`` would be the base class, holding information about the general sprite, name and description as well as logic for picking up, storing etc. All these values were exposed as editor variables, allowing a large collection of resources to be made with minimal effort.
+- ``Generic Items`` would be the base class, holding information about the general sprite, name and description as well as logic for picking up, storing etc. All these values were exposed as editor variables, allowing a large collection of resources to be made with minimal effort.
+- ``Modular Parts`` inherit from ``Generic Items`` and contain some additional information and logic, such as materials and what slots on a ``Modular Item`` they fit within and their damage state. These would be what make up the different weapons and armour, with multiple variations existing with the sprites to give a sense of uniqueness to each craft.
+- ``Modular Items`` are a special case of a ``Generic Item`` that itself doesnt do anything, but can contain various ``Modular Parts``. You will find a single one of these as the actual representation of a whole weapon or piece of armour, combining their sprites and stats. They contain the logic for swapping parts out, as well as tracking who their owners are and what their desired changes are. After developing the game for a while, we found it was too hard to visualise the difference of these directly, which is why we added the ``Inspection Table`` as shown below to display its contents in a more direct way.
 
-<img src="/images/projects/daves_blacksmith_shop/dbs5.png" alt=""/>
+::gallery{scrolling="false"}
+![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs5.png)
 
-``Modular Parts`` inherit from ``Generic Items`` and contain some additional information and logic, such as materials and what slots on a ``Modular Item`` they fit within and their damage state. These would be what make up the different weapons and armour, with multiple variations existing with the sprites to give a sense of uniqueness to each craft.
+![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs6.png)
 
-<img src="/images/projects/daves_blacksmith_shop/dbs6.png" alt=""/>
-
-``Modular Items`` are a special case of a ``Generic Item`` that itself doesnt do anything, but can contain various ``Modular Parts``. You will find a single one of these as the actual representation of a whole weapon or piece of armour, combining their sprites and stats. They contain the logic for swapping parts out, as well as tracking who their owners are and what their desired changes are. After developing the game for a while, we found it was too hard to visualise the difference of these directly, which is why we added the ``Inspection Table`` as shown below to display its contents in a more direct way.
-
-<img src="/images/projects/daves_blacksmith_shop/dbs4.png" alt=""/>
+![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs4.png)
+::
 
 After the initial version, I would iterate over rewriting much of the code to be more performant with the high numbers of items present as well as enabling more behaviors built in with exposed methods to interact with the items, such as on ``Crafting Stations``.
 

@@ -17,7 +17,7 @@
 
     prose-h2:text-primary prose-h2:stripes prose-h2:pl-2 prose-h2:py-1 prose-h2:text-3xl prose-h2:font-bold
 
-    prose-h3:text-white prose-h3:pl-2 prose-h3:py-1 prose-h3:text-xl prose-h3:font-bold prose-h3:underline prose-h3:decoration-primary
+    prose-h3:text-secondary! prose-h3:pl-2 prose-h3:py-1 prose-h3:text-xl prose-h3:italic prose-h3:font-bold
 
     prose-strong:text-white
 
