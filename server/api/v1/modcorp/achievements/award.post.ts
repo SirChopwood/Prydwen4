@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
         "token": z.string(),
         "user_name": z.string(),
         "user_id": z.string(),
-        "target": z.string(),
+        "target": z.array(z.string()).min(1),
         "achievement": z.number().min(0),
         "note": z.string().optional(),
         "tier": z.number().min(0).optional(),
@@ -21,23 +21,30 @@ export default defineEventHandler(async (event) => {
     })
     if (!achievement || !achievement[0]) {throw createError({statusCode: 400, statusMessage: `Achievement not found!`})}
 
+    for (const target of context.body.target) {
+        await giveAward(target, context.body.user_id, context.body.user_name, achievement[0], context.body.note, context.body.tier)
+    }
+    return
+})
+
+async function giveAward(target_id: string, user_id: string, user_name: string, achievement: any, note: string, tier: number) {
     try {
         let newAward = await db.insert(schema.ModCorp_AwardedAchievements).values({
-            "user_id": context.body.target,
-            "achievement": achievement[0].id,
+            "user_id": target_id,
+            "achievement": achievement.id,
             "timestamp": new Date().toISOString(),
-            "note": context.body.note || "",
-            "tier": context.body.tier || 0,
+            "note": note || "",
+            "tier": tier || 0,
         }).returning()
         if (newAward) {
             await db.insert(schema.ModCorp_Logs).values({
-                "user_name": context.body.user_name,
-                "user_id": context.body.user_id,
-                "action": `Awarded achievement [${achievement[0].id}] ${achievement[0].name} to user ${newAward[0].user_id}.`,
-                "reason": context.body.note || "",
+                "user_name": user_name,
+                "user_id": user_id,
+                "action": `Awarded achievement [${achievement.id}] ${achievement.name} to user ${newAward[0].user_id}.`,
+                "reason": note || "",
                 "timestamp": new Date().toISOString()
             })
-            return newAward
+            return
         } else {
             throw createError({statusCode: 400, statusMessage: `Failed to award Achievement.`})
         }
@@ -45,6 +52,6 @@ export default defineEventHandler(async (event) => {
         console.log(error)
         throw createError({statusCode: 400, statusMessage: `Failed to award Achievement.`})
     }
-})
+}
 
 
