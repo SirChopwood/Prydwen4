@@ -4,7 +4,7 @@
 
 @theme {
     --font-cabin: 'Cabin', sans-serif;
-    --font-jetbrains: 'JetBrains Mono', sans-serif;
+    --font-jetbrains: 'JetBrains Mono', monospace;
     --color-primary: #ffbb00;
     --color-secondary: #c940af;
 }
