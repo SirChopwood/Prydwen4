@@ -1,6 +1,8 @@
 import type {UserSessionComposable} from "#auth-utils";
-import type {RRM_Session, RRM_Request} from "~/server/utils/drizzle";
 import {useUserSession} from "#imports";
+
+type RRM_Session = typeof schema.RRM_Session.$inferSelect
+type RRM_Request = typeof schema.RRM_Request.$inferSelect
 
 // REQUEST MANAGER FOR PANEL
 
@@ -436,9 +438,9 @@ class RRM_Request_Listener {
         console.log("Rami Request Listener - Mounted")
 
         if (Array.isArray(this.route.params.twitchName)) {
-            this.channel.value = this.route.params.twitchName[0]
+            this.channel.value = String(this.route.params.twitchName[0])
         } else {
-            this.channel.value = this.route.params.twitchName
+            this.channel.value = String(this.route.params.twitchName)
         }
         console.log(`Rami Request Listener - Searching for Channel: ${this.channel.value}`)
 

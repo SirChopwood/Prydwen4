@@ -1,13 +1,15 @@
 // Check a Request ID is valid.
+import {eq} from "drizzle-orm";
+
 export async function isRequestIdValid(requestId: number, blocking: boolean = false) {
     return !!(await fetchRequestById(requestId, blocking))
 }
 
 // Fetch a Request by its ID.
 export async function fetchRequestById(requestId: number, blocking: boolean = false) {
-    let foundRequest: RRM_Request | undefined
+    let foundRequest: typeof schema.RRM_Request.$inferSelect | undefined
     try {
-        foundRequest = await useDrizzle().query.RRM_Request.findFirst({
+        foundRequest = await db.query.RRM_Request.findFirst({
             where: (requests, {eq}) => {
                 return eq(requests.id, requestId)
             }
@@ -26,9 +28,9 @@ export async function fetchRequestById(requestId: number, blocking: boolean = fa
 
 // Fetch all Requests of a given Session.
 export async function fetchRequestsBySession(sessionId: number, blocking: boolean = false) {
-    let foundRequests: Array<RRM_Request> = []
+    let foundRequests: Array<typeof schema.RRM_Request.$inferSelect> = []
     try {
-        foundRequests = await useDrizzle().query.RRM_Request.findMany({
+        foundRequests = await db.query.RRM_Request.findMany({
             where: (requests, {eq}) => {
                 return eq(requests.sessionId, sessionId)
             }
@@ -47,12 +49,12 @@ export async function fetchRequestsBySession(sessionId: number, blocking: boolea
 
 // Create a new Request in the DB and add it to its Session.
 export async function createRequest(sessionId: number, user: string, request: {text: string, code: string, metadata: Record<string, string>}, blocking: boolean = false) {
-    let newRequest: Array<RRM_Request> = []
+    let newRequest: Array<typeof schema.RRM_Request.$inferSelect> = []
 
     if (await isSessionIdOpen(sessionId, blocking)) {
-        let existing: Array<RRM_Request> = []
+        let existing: Array<typeof schema.RRM_Request.$inferSelect> = []
         try {
-            existing = await useDrizzle().query.RRM_Request.findMany({
+            existing = await db.query.RRM_Request.findMany({
                 where: (requests, {eq, and}) => {
                     return and(eq(requests.sessionId, sessionId), eq(requests.code, request.code))
                 }

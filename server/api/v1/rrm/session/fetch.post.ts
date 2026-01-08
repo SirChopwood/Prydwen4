@@ -1,3 +1,7 @@
+import z from "~~/server/utils/z";
+import {TwitchChannel} from "~~/server/utils/rrm/twitch";
+import {db, schema} from "#build/types/nitro-imports";
+
 export default defineEventHandler(async (event) => {
     const context = await validateRequest(event, z.strictObject({
         "channel": TwitchChannel.optional(),
@@ -6,11 +10,11 @@ export default defineEventHandler(async (event) => {
         "sessionId": z.number().optional(),
     }), false)
 
-    let activeSessions: Array<RRM_Session> = []
+    let activeSessions: Array<typeof schema.RRM_Session.$inferSelect> = []
     if (context.body.channel && !context.body.force) {
         activeSessions = await fetchSessionByChannel(context.body.channel, true)
     } else if (context.body.channels && !context.body.force) {
-        let sessionRecord: Record<string, RRM_Session> = {}
+        let sessionRecord: Record<string, typeof schema.RRM_Session.$inferSelect> = {}
         for await (const channel of context.body.channels) {
             const session = await fetchSessionByChannel(channel)
             if (session && session[0]) {

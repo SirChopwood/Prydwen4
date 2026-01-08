@@ -1,4 +1,6 @@
 // Check if a session ID is valid.
+import {and, eq, ne, or, sql} from "drizzle-orm";
+
 export async function isSessionIdValid(sessionId: number, blocking: boolean = false) {
     return !!(await fetchSessionById(sessionId, blocking))
 }
@@ -12,9 +14,9 @@ export async function isSessionIdOpen(sessionId: number, blocking: boolean = fal
 
 // Fetch a session by its ID.
 export async function fetchSessionById(sessionId: number, blocking: boolean = false) {
-    let foundSession: RRM_Session | undefined
+    let foundSession: typeof schema.RRM_Session.$inferSelect | undefined
     try {
-        foundSession = await useDrizzle().query.RRM_Session.findFirst({
+        foundSession = await db.query.RRM_Session.findFirst({
             where: (sessions, {eq}) => {
                 return eq(sessions.id, sessionId)
             }
@@ -33,9 +35,9 @@ export async function fetchSessionById(sessionId: number, blocking: boolean = fa
 
 // Fetch the current session of a given Twitch Channel.
 export async function fetchSessionByChannel(channel: {id: number, name: string}, blocking: boolean = false) {
-    let foundSessions: Array<RRM_Session> = []
+    let foundSessions: Array<typeof schema.RRM_Session.$inferSelect> = []
     try {
-        let sessionQuery = await useDrizzle().select().from(schema.RRM_Session).where(
+        let sessionQuery = await db.select().from(schema.RRM_Session).where(
             and(
                 or(
                     sql`(SELECT 1 FROM json_each(channels) WHERE (value = json(${JSON.stringify(channel)})))`, // Iterate through channels to see if one matches

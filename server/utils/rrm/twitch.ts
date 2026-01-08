@@ -1,4 +1,11 @@
+import { sql } from "drizzle-orm";
 import url from "url"
+import z from "~~/server/utils/z";
+
+export const TwitchChannel = z.strictObject({
+    "id": z.number(),
+    "name": z.string(),
+})
 
 export async function fetchPermittedChannels(channelId: number, channelName: string, token: string) {
     let channelList: Array<z.infer<typeof TwitchChannel>> = []
@@ -15,8 +22,8 @@ export async function fetchPermittedChannels(channelId: number, channelName: str
 export async function fetchGroupChannels(channelId: number, channelName: string) {
     let channelList: Array<z.infer<typeof TwitchChannel>> = []
     let channel = {id: channelId, name: channelName}
-    let groups: Array<RRM_Group> | undefined
-    groups = await useDrizzle().select().from(schema.RRM_Group).where(
+    let groups: Array<typeof schema.RRM_Group.$inferSelect> | undefined
+    groups = await db.select().from(schema.RRM_Group).where(
         sql`(SELECT 1 FROM json_each(channels) WHERE (value = json(${JSON.stringify(channel)})))`, // Iterate through channels to see if one matches
     )
     if (groups && groups.length > 0) {

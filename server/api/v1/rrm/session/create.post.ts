@@ -1,3 +1,5 @@
+import {TwitchChannel} from "~~/server/utils/rrm/twitch";
+
 export default defineEventHandler(async (event) => {
     const context = await validateRequest(event, z.strictObject({
         "user": z.string(),
