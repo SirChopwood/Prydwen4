@@ -29,22 +29,22 @@ export default defineNuxtConfig({
           directory: "./.output/public/",
           binding: "ASSETS"
         },
-        d1_databases: [
-          {
-            binding: 'DB',
-            database_id: '0aaa1682-dbee-49af-a1d8-68299824e654',
-            migrations_table: "_hub_migrations",
-            migrations_dir: ".output/server/db/migrations/sqlite/",
-          }
-        ],
-        durable_objects: {
-          bindings: [
-            {
-              name: "$DurableObject",
-              class_name: "$DurableObject"
-            }
-          ]
-        }
+        // d1_databases: [
+        //   {
+        //     binding: 'DB',
+        //     database_id: '0aaa1682-dbee-49af-a1d8-68299824e654',
+        //     migrations_table: "_hub_migrations",
+        //     migrations_dir: ".output/server/db/migrations/sqlite/",
+        //   }
+        // ],
+        // durable_objects: {
+        //   bindings: [
+        //     {
+        //       name: "$DurableObject",
+        //       class_name: "$DurableObject"
+        //     }
+        //   ]
+        // }
       }
     },
     experimental: {
