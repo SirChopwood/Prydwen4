@@ -21,17 +21,17 @@
 
     prose-strong:text-white
 
-    prose-ol:marker:fill-secondary
+    prose-ol:marker:text-secondary prose-ol:list-decimal prose-ol:list-inside prose-ol:pl-8
 
-    prose-ul:marker:fill-secondary
+    prose-ul:marker:text-secondary prose-ul:list-disc prose-ul:list-inside prose-ul:pl-8
 
-    prose-a:no-underline prose-a:text-primary
+    prose-a:no-underline prose-a:text-primary prose-a:decoration-1 prose-a:hover:underline prose-a:hover:text-white prose-a:hover:decoration-white
 
     prose-p:m-2
 
     prose-code:codeblock
 
-    prose-img:rounded-lg prose-img:border-2 prose-img:border-neutral-700 prose-img:max-h-80 prose-img:w-auto prose-img:justify-self-center prose-img:self-center prose-img:mb-4
+    prose-img:rounded-lg prose-img:border-2 prose-img:border-neutral-700 prose-img:max-h-80 prose-img:w-auto prose-img:justify-self-center prose-img:self-center prose-img:mb-4 prose-img:min-h-10 prose-img:min-w-20
 }
 
 @utility stripes {
@@ -73,9 +73,9 @@
 }
 
 @utility codeblock {
-    @apply bg-neutral-800 outline outline-1 outline-neutral-700 rounded-sm px-1 py-0 md:px-2 md:py-0.5 text-neutral-400 font-jetbrains
+    @apply bg-neutral-800 outline outline-1 outline-neutral-700 rounded-xs px-1 py-0 md:px-2 md:py-0.5 text-neutral-400 font-jetbrains
 }
 
 @utility tooltip {
-    @apply invisible absolute rounded-md bg-neutral-900 border-2 border-secondary inset-0 p-0.5 h-fit translate-y-8 hover:visible hover:z-50
+    @apply invisible absolute rounded-xs bg-neutral-900 border-2 border-secondary inset-0 p-0.5 h-fit translate-y-8 hover:visible hover:z-50
 }

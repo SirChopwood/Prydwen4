@@ -21,7 +21,9 @@ hidden: "false"
 # Introduction
 In the summer of 2025, myself and a few friends decided to take on a game jam. We settled on the [Do You WANNA Jam](https://itch.io/jam/do-you-wanna-jam-2025), spending one week to create an experience based around the theme of "PATCH IT UP".
 
+::gallery{scrolling="false"}
 ![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs1.png)
+::
 
 # Sprites & Textures
 ## Bringing life and soul to a pixel world.
@@ -29,11 +31,15 @@ During the jam, I took a lead on the visual style of the project, with many grou
 
 Using these concepts I was able to go ahead and recreate them in Photoshop with a singular palette and with the different layers needed for use ingame. Initially this consisted of some walls and floors made of materials like stone and wood. 
 
+::gallery{scrolling="false"}
 ![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs3.png)
+::
 
 After getting a base foundation and style set from those, I pivoted to the sprites for the items themselves. I used greyscale base sprites with colours applied at runtime to minimise the number of sprites we'd need to create while enabling the other members of the team to quickly add new things to the game by simply changing a variable. This is best shown with the different metals, all sharing their bases.
 
+::gallery{scrolling="false"}
 ![Dave's Blacksmith Shop 1](/images/projects/daves_blacksmith_shop/dbs2.png)
+::
 
 # Programming
 ## Items, Items and more Items.
@@ -59,7 +65,11 @@ After the initial version, I would iterate over rewriting much of the code to be
 # Programming
 ## Crafting the tools to craft.
 
-To be continued...
+For the coding parts of the project, I mainly worked on the item systems and crafting. As outlined above, this involved making modular systems that could be slotted together and connected to work with other elements of the game. 
+
+Mainly this consisted of having an inventory with slots, that can be filled by items. Simple methods were included to add, remove, swap, drop, pickup and check contents easily. Using this, I could then add a second layer to handle doing this on a multi-slot scale, making the whole inventory work from a single class if needed.
+
+Examples of these being used include the Player's Inventory, NPC's held item, Storage Crates and the Crafting Stations.
 
 # User Interface
 ## Guide Books & Main Menus

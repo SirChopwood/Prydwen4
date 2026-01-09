@@ -16,7 +16,9 @@ hidden: "false"
 **Siege & Shield** (Project Name: `MageDefenders`) is a game that myself and ~20 other students created during a university event, collaborating in large teams with a mixture of disciplines.
 The aim was to simulate the experience of working in a studio with different disciplines working together in subteams to all contrubute towards and finish a project.
 
-<img src="/images/projects/siege_and_shield/banner.png" alt="">
+::gallery{scrolling="false"}
+![Banner](/images/projects/siege_and_shield/banner.png)
+::
 
 As a team we decided on making a Third Person Tower Defence game, incorporating the unique viewpoint seen in games such as Orcs Must Die and Sanctum.
 Our art style was majorly inspired by World of Warcraft and Dauntless, using a fantasy medieval theme.
@@ -37,7 +39,9 @@ My primary focus as a member of the Tech Team was the Building and Tower system.
 
 For this, building is handled through an Actor Component, containing all the logic for handling the player's current state. Included with this would be a UI for the mode and an in-world decoy, previewing where and what would be built. This was set with easy to customise data in the editor via a struct on the tower blueprints.
 
-<img src="/images/projects/siege_and_shield/building.gif" alt="">
+::gallery{scrolling="false"}
+![Building](/images/projects/siege_and_shield/building.gif)
+::
 
 The towers themselves work on an inheritance system from a master blueprints, with multiple helper components for reusable functionalities. This setup means designers can quickly test and implement new towers without needing to interact with the core functionalities.
 
@@ -47,7 +51,9 @@ All towers are then managed by a manager actor in the world, this acts as the ma
 ## Materials and VFX
 One of my other tasks was working with the Environment Team to create materials and vfx for multiple assets they were implementing into engine. Often this involved just helping them setup different adjustment parameters to their textures. I also took this opportunity to experiment with a couple new ideas and further my general knowledge of Unreal Engine's new(ish) Niagara systems.
 
-<img src="/images/projects/siege_and_shield/tech_art.gif" alt="">
+::gallery{scrolling="false"}
+![Tech Art](/images/projects/siege_and_shield/tech_art.gif)
+::
 
 A larger task was to setup the landscape materials. This included dynamic grass and rocks and automatic cliff edges, making level editing as seamless as possible for the level designer. Along with this was tree leaves and grass meshes with materials setup for subtle swaying in the wind, brining life to otherwise entirely static meshes.
 

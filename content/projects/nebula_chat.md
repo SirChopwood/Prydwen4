@@ -14,6 +14,7 @@ buttonLinks:
   - "https://github.com/SirChopwood/DwarvesVSZombies"
 hidden: "false"
 ---
+
 ## Overview
 One of the core elements of the game [Space Station 13](https://spacestation13.com/) (SS13) is the iconic Chat Box. The UI for the chat takes up a considerable area of the screen, ranging from a quarter to half depending on preferences. It is also where a lot of the action actually occurs in the game. For example any kind of discussion, talking, radio chatter and even in character mental notes are all conveyed through the different fonts and styles displayed within the chat.
     
@@ -44,11 +45,18 @@ _In the Telecommunications (TComms) setup each step is controlled by a different
 - (Optional) Messages are logged & scripts are applied by `Servers`.
 - Resulting messages are broadcasted by the `Transmitter`.
 
-<img src="/images/projects/nebula_chat/day1_diagram.png" alt=""/>
+::gallery{scrolling="false"}
+![Day 1 Diagram](/images/projects/nebula_chat/day1_diagram.png)
+::
 
-With those notes made, I also quickly took to blender to model out some placeholder meshes for each point. Shown in order; `Server`, `Mainframes`, `Transmitter`/`Receiver`, `Hub`, `Processor`.
+With those notes made, I also quickly took to blender to model out some placeholder meshes for each point. 
+Shown in order:
 
-<img src="/images/projects/nebula_chat/day1_models.png" alt=""/>
+`Server` -> `Mainframes` -> `Transmitter` / `Receiver` -> `Hub` -> `Processor`
+
+::gallery{scrolling="false"}
+![Day 1 Models](/images/projects/nebula_chat/day1_models.png)
+::
 
 # 21/11/2024
 ## Day 2 - Initial Proof of Concept
@@ -57,7 +65,10 @@ The first in-engine task was to get an incredibly basic and simple example of th
 To facilitate the system, I created a base `TComms Machine` actor that would be used for communication, holding generalised functions that could be overridden for the handling of a message in all the child actors. This would ensure that there is a consistent method to pass data between the machines as well as simplify later updates to their functionality.
 
 The machines for now would have the ability to directly link them via the Editor, adding any following machines to the preceding one's array. This is then verified at game start. In the future this is where multi tool and wiring functionality could be added to enable dynamically built setups, however, it is out of the scope of this system. Additionally the RouteRadioMessage function will facilitate that need to pass data between machines.
-<img src="/images/projects/nebula_chat/day2_tcomms_machine.png" alt=""/>
+
+::gallery{scrolling="false"}
+![Day 2 TComms Machine](/images/projects/nebula_chat/day2_tcomms_machine.png)
+::
 
 ### Receiver
 For the concept, this simply takes any message given and just passes it onwards. Later on it'll be the target to receive a message from external sources.
@@ -71,10 +82,12 @@ The processor takes the message and reverses the scrambling algorithm, returning
 For the demo, servers do nothing for now. In the future their primary purpose will be logging as well as the ability to customise any additional message processing. (Such as putting job roles in the message or whitelisting specific IDs to speak a channel.
 ### Transmitter
 The transmitter simply prints text to the debug log for now, however in the future it will be what broadcasts messages to any listening machines.
-<div class="project-gallery">
-    <img src="/images/projects/nebula_chat/day2_actors.png" alt="" class=""/>
-    <img src="/images/projects/nebula_chat/day2_config.png" alt="" class=""/>
-</div>
+
+::gallery{scrolling="false"}
+![Day 2 Actors](/images/projects/nebula_chat/day2_actors.png)
+
+![Day 2 Config](/images/projects/nebula_chat/day2_config.png)
+::
 
 
 # 22/11/2024

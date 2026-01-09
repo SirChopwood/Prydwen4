@@ -28,7 +28,9 @@ hidden: "false"
 ### Justification
 To create a Virtual Reality game, physics will always be a component a developer will need to account for. This is in part due to the inherent nature of using a head mounted display with hand-tracking controllers. Anything the player interacts with, at least relative to them, should respond predictably. This often involves objects succumbing to gravity or pressing up against solid walls.
 
-<img src="/images/projects/munitions_officer_sim/interaction1.png" alt="">
+::gallery{scrolling="false"}
+![Interaction 1](/images/projects/munitions_officer_sim/interaction1.png)
+::
 
 To simulate this effect on the two-dimensional prototype I am constructing, any interactable objects will be set to continuously simulate their position in world space. The player’s cursor will not directly influence the positions of these objects, but instead impart forces upon them that “push” or “pull” the object in the intended direction. Combined with a slight delay, this creates the feeling of weight or drag on the object.
 
@@ -44,10 +46,11 @@ The interface design will be a combination of two pre-existing designs with some
 ### Justification
 The primary reason for using the SS14 UI design is due to it being the most modern version of the existing interfaces from the SpaceStation games. Being only a couple of years old and still actively developed means it's more suited for use in modern game engines compared to the original. It also features a relatively high contrast and easily readable system of elements that can be reused for quick construction of interfaces, following distinct patterns for formatting that assist in player understanding.
 
-<div class="project-gallery">
-    <img src="/images/projects/munitions_officer_sim/interface1.png" alt="">
-    <img src="/images/projects/munitions_officer_sim/interface2.png" alt="">
-</div>
+::gallery{scrolling="false"}
+![Interface 1](/images/projects/munitions_officer_sim/interface1.png)
+
+![Interface 2](/images/projects/munitions_officer_sim/interface2.png)
+::
 
 FTL13’s UIs, for comparison, were created using basic HTML elements with simple CSS formatting due to the limitations of the [BYOND engine](https://www.byond.com/?) at the time. This means that almost all elements are simple square box buttons and text. While functional, this does limit readability to the player as there are no visual clues to guide their actions or formatting to organise the content.
 
@@ -95,7 +98,9 @@ the focus of the gameplay will allow players to immerse themselves better. With 
 action and task the player takes will feel more personal to the player, encouraging them into
 a sense of “flow” and tunnel vision.
 
-<img src="/images/projects/munitions_officer_sim/mac1.png" alt="">
+::gallery{scrolling="false"}
+![MAC 1](/images/projects/munitions_officer_sim/mac1.png)
+::
 
 The inclusion of many menu elements on the screen and various mini-game tasks to
 complete are intentionally done to contribute to an overarching sense of pressure building in

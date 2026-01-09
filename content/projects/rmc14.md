@@ -26,11 +26,16 @@ I have spent my recent free time contributing to the project as a way to both re
 
 My first contributions to the project were initially in the form of a simple resprite of the ammunition and magazine boxes the game used. Simple enough on its own, however as I began working with a spriter (artist) on this, I found that the old legacy system used a combination of over 500 different sprites in order to create their visuals for roughly 50 items in the game. This was, quite frankly, absurd and could certainly be improved in a few areas. Most specifically the fact that many sprites were identical if not for colour.
 
-<img src="/images/projects/rmc14/modularsprites.png" alt=""/>
+
+::gallery{scrolling="false"}
+![Modular Sprites](/images/projects/rmc14/modularsprites.png)
+::
 
 My solution was to make a set of modular sprites, these could then be coloured in-engine using some functions buried in the code for the engine. It would mean that with only about 50 sprites, I could reassemable all the existing assets in a way that would be far easier to maintain long term.
 
-<img src="/images/projects/rmc14/modularboxes.png" alt=""/>
+::gallery{scrolling="false"}
+![Modular Boxes](/images/projects/rmc14/modularboxes.png)
+::
 
 The end result was a far more consistent visual style as well as significant optimisations to the developer experience and even a slight resource usage improvement.
 
@@ -45,6 +50,8 @@ Calling back to the boxes, I suggested an idea, `"Why dont we just apply camo in
 
 After a few long nights I had a working prototype. By combining two sprites, one pre-coloured and one in greyscale, I could have the game apply a colour to the greyscale sprite and layer it over to make up the weapon sprite in any colour desired. I then combined this with some easy to change component variables so that the existing CamouflageSystem could apply a colour hex value instead of a folder of entirely separate sprites. The system wasnt perfect, the code needs some cleanup from a standards point of view. However, it served a good function and acts well as a proof of concept for further optimisations that can be made in the game.
 
-<img height="128" src="/images/projects/rmc14/m13.png" width="128" style="image-rendering: pixelated;" alt=""/>
+::gallery{scrolling="false"}
+![M13](/images/projects/rmc14/m13.png)
+::
 
 This new system was dubbed **CamoTech:tm:** and it sped up the implementation of new weapons a great deal. In order to help maintain its longer term usage and onboard the other contributors to using it, I did write up a [guide](https://hackmd.io/@Ramiris/BkTi3lexge ) as well as guide them on some earlier implementations. The ultimate payoff happened when PRs were being made without any effort needed from myself to integrate CamoTech:tm:.

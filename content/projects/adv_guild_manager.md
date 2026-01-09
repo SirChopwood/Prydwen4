@@ -21,11 +21,15 @@ For this project, I spent a large amount of time using the `Geometry Script` plu
 
 The first prototype was a simple box room made out of 5 cubes (4 walls and a floor). With this I had a singular mesh that I could make operations on. For example, cutting out holes for windows and doors. While this is a rather trivial task to do in other programs, the achievement came from getting this to function through pure blueprint without external libraries.
 
+::gallery{scrolling="false"}
 ![Geometry Script Demo 1](/images/projects/adv_guild_manager/geoscript_demo1.png)
+::
 
 I created a `Data Asset` alongside some variables on the blueprints themselves to expose controls to the developer. Things such as meshes, colours, sizes etc. could easily be controlled without needing to change them in an external package. Additionally, this would be useful later on in the project if we had the space to add room building to the player as we could hotswap out preset room designations when they're planning their builds.
 
+::gallery{scrolling="false"}
 ![Geometry Script Demo 2](/images/projects/adv_guild_manager/geoscript_demo2.png)
+::
 
 With the room bounds set and a rough prototype signed off by my university lecturer, It was time to add in the meshes from the room data assets. This began by copying the data of an existing `Static Mesh` into the new `Dynamic Mesh`. From here i could apply any transforms onto it before using the equivalent of the `Array` modifier from Blender to create a chain of meshes. Repeating this logic a few times and I could generate walls and floors as before, but now more detailed than a cube.
 
@@ -46,7 +50,9 @@ At this point the performance had become **significantly** worse. The game would
 ### The solution
 With days remaining on the project and no feasible solution in sight, the feature had to be changed. It was at this point that we as a team had agree to use a backup solution. This involved using lines of individual static mesh components. For the game demo this functioned fine, however any long term gameplay would have suffered from the performance hit it induces from the high numbers found in the game (We were already easily reach 1000+ meshes just for walls in testing).
 
+::gallery{scrolling="false"}
 ![Geometry Script Demo 5](/images/projects/adv_guild_manager/geoscript_demo5.png)
+::
 
 
 # Chapter 2
@@ -78,7 +84,11 @@ Additional features that followed included progress bars with customisable colou
 While my primary focus for this project was working on the gameplay programming, I did manage to get a small amount of time to create some particle systems and materials to use about the map.
 
 One of the highlighted particle systems created for this project was the candles for the Coven. These utilised a set of still frames of the flame, scaling, moving and recolouring to give the impression of a living fire. On top of this I experimented with ribbon renderers, achieving a nice stylised smoke trail that fits naturally with the rest of the art style. This effect built on my previous work last year on flames and smoke, achieving a much more subtle and simple effect while also being far more optimised than the previous attempts.
+::gallery{scrolling="false"}
 ![TechArt Demo 1](/images/projects/adv_guild_manager/tech_art_demo1.png)
+::
 
 Early on in the project I worked on a cleaned up version of my Cel Shader. This includes customisable outlines and shadow masking. Unlike many alternatives it attempts to remain subtle in its effects and works to make the textures of the asset pop and contract.
+::gallery{scrolling="false"}
 ![TechArt Demo 2](/images/projects/adv_guild_manager/background.png)
+::
