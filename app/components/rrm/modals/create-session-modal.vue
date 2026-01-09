@@ -103,7 +103,7 @@ async function submit() {
 
 <template>
   <modal-template title="Create New RRM Session" :name="name" :modal-manager="modalManager" >
-    <div class="bg-neutral-900 rounded-b-md p-1 flex flex-col gap-2">
+    <div class="bg-neutral-900 rounded-b-sm p-1 flex flex-col gap-2">
       <div class="flex flex-row w-full">
         <div class="basis-1/4">Owning Channel</div>
         <select class="grow bg-neutral-800 px-2 py-1 rounded-sm text-secondary hover:bg-neutral-700 outline outline-0 focus:outline-1 outline-primary transition duration-150" v-model="owningChannel">

@@ -31,7 +31,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="bg-neutral-800 rounded-lg border-primary border-2 m-8 flex flex-col w-full h-fit max-h-full overflow-scroll">
+  <div class="bg-neutral-800 rounded-sm border-primary border-2 m-8 flex flex-col w-full h-fit max-h-full overflow-scroll">
     <div v-for="message of messages">{{message}}</div>
   </div>
 </template>

@@ -11,8 +11,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="w-full h-fit rounded-md text-left bg-neutral-900">
-    <label class="relative flex flex-row justify-center justify-items-center text-pretty outline outline-0 rounded-md overflow-clip stripes peer">
+  <div class="w-full h-fit rounded-sm text-left bg-neutral-900">
+    <label class="relative flex flex-row justify-center justify-items-center text-pretty outline outline-0 rounded-sm overflow-clip stripes peer">
       <input type="checkbox" class="peer size-0 opacity-0">
       <div ref="Title" class="grow text-xl text-secondary font-bold px-2 py-1 select-none">
         {{ title }}

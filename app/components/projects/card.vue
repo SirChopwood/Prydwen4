@@ -28,8 +28,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <NuxtLink :to="link" class="relative flex flex-col max-w-80 min-h-40 text-pretty outline outline-0 rounded-md overflow-clip outline-primary hover:outline-2 hover:-translate-y-2 hover:scale-110 hover:z-10 bg-neutral-900 transition-all duration-200 ease-in-out">
-    <div class="w-full h-40 object-cover overflow-hidden rounded-t-lg">
+  <NuxtLink :to="link" class="relative flex flex-col max-w-80 min-h-40 text-pretty outline outline-0 rounded-sm overflow-clip outline-primary hover:outline-2 hover:-translate-y-2 hover:scale-110 hover:z-10 bg-neutral-900 transition-all duration-200 ease-in-out">
+    <div class="w-full h-40 object-cover overflow-hidden rounded-t-sm">
       <nuxt-img class="w-full h-full" :src="thumbnail" placeholder/>
     </div>
 

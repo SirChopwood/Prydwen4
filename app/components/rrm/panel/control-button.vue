@@ -25,7 +25,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <button ref="Button" @click="$emit('ButtonClicked')" class="border-2 -:border-neutral-700 -:bg-neutral-900 -:hover:bg-neutral-600 disabled:bg-neutral-900 disabled:border-neutral-600 disabled:text-neutral-400 -:text-neutral-400 hover:text-white py-1 px-2 mx-1 my-2 rounded-md transition-all duration-75">
+  <button ref="Button" @click="$emit('ButtonClicked')" class="border-2 -:border-neutral-700 -:bg-neutral-900 -:hover:bg-neutral-600 disabled:bg-neutral-900 disabled:border-neutral-600 disabled:text-neutral-400 -:text-neutral-400 hover:text-white py-1 px-2 mx-1 my-2 rounded-sm transition-all duration-75">
     <icon v-if="icon" :name="icon" class="size-5 -translate-y-[1px] align-middle mr-1"/>
     <slot />
   </button>

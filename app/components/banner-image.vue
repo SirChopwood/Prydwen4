@@ -13,7 +13,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="disabled || link === undefined" class="flex flex-col -:w-full h-auto outline outline-2 outline-neutral-800 hover:outline-neutral-700 rounded-md group transition-all duration-100 ease-in-out">
+  <div v-if="disabled || link === undefined" class="flex flex-col -:w-full h-auto outline outline-2 outline-neutral-800 hover:outline-neutral-700 rounded-sm group transition-all duration-100 ease-in-out">
     <div class="object-none overflow-clip object-center">
       <nuxt-img class="w-full h-auto" :src="image" placeholder/>
     </div>
@@ -22,7 +22,7 @@ export default defineComponent({
       <div class="h-full px-4 py-1 truncate"><slot/></div>
     </div>
   </div>
-  <a v-else :href="link" class="flex flex-col -:w-full h-auto outline outline-2 outline-neutral-800 hover:outline-primary rounded-md group transition-all duration-100 ease-in-out">
+  <a v-else :href="link" class="flex flex-col -:w-full h-auto outline outline-2 outline-neutral-800 hover:outline-primary rounded-sm group transition-all duration-100 ease-in-out">
     <div class="object-none overflow-clip object-center">
       <nuxt-img class="w-full h-auto" :src="image" placeholder/>
     </div>

@@ -33,7 +33,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div ref="Tag" class="bg-neutral-950 hover:bg-neutral-900 outline outline-1 outline-neutral-600 text-neutral-100 rounded-md px-2 text-sm h-fit w-fit">
+  <div ref="Tag" class="bg-neutral-950 hover:bg-neutral-900 outline outline-1 outline-neutral-600 text-neutral-100 rounded-sm px-2 text-sm h-fit w-fit">
     <slot/>
   </div>
 </template>

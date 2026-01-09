@@ -138,8 +138,8 @@ let ping = computed(() => {
     </fieldset>
   </div>
   <div class="w-full flex flex-row gap-4 p-4">
-    <div v-if="viewMode == viewModes.Split" class="rounded-md bg-neutral-900 p-2 basis-3/5 relative">
-      <div class="h-fit w-full rounded-md bg-neutral-950 border-purple-950 border-2">
+    <div v-if="viewMode == viewModes.Split" class="rounded-sm bg-neutral-900 p-2 basis-3/5 relative">
+      <div class="h-fit w-full rounded-sm bg-neutral-950 border-purple-950 border-2">
         <icon v-if="!twitchPlayer" name="mdi:twitch" class="size-1/3 text-purple-950 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse -z-50" />
         <div id="EmbeddedTwitchPlayer"/>
       </div>
@@ -159,7 +159,7 @@ let ping = computed(() => {
 
       <!--OVERLAY CONTROLS-->
       <control-category title="Overlay Controls (DISABLED)" subtitle="Control how the Queue is displayed on the Overlay.">
-<!--        <textarea ref="NotificationMessageText" class="w-full rounded-md bg-neutral-950 p-2 border-2 border-opacity-0 focus:border-opacity-100 border-neutral-700 !outline-none" placeholder="This is the message that will display when the queue is paused."></textarea>-->
+<!--        <textarea ref="NotificationMessageText" class="w-full rounded-sm bg-neutral-950 p-2 border-2 border-opacity-0 focus:border-opacity-100 border-neutral-700 !outline-none" placeholder="This is the message that will display when the queue is paused."></textarea>-->
 <!--        <control-button ref="OverlayMessageWelcome" colour="Blue">Welcome</control-button>-->
 <!--        <control-button ref="OverlayMessagePause" colour="Blue">Pause</control-button>-->
 <!--        <control-button ref="OverlayMessageCustom" icon="material-symbols:drive-file-rename-outline" colour="Yellow">Custom Message</control-button>-->
@@ -173,7 +173,7 @@ let ping = computed(() => {
         <span ref="UptimeText" class="codeblock min-w-10 inline-block text-center">{{RamiRequestManager.getCurrentRequest+1}}</span>
         <control-button ref="RequestQueueNext" icon="material-symbols:fast-forward-rounded" colour="Blue" @button-clicked="RamiRequestManager.setCurrentRequest(RamiRequestManager.getCurrentRequest+1)">Next</control-button>
 <!--        <control-button ref="RequestQueueAdd" icon="material-symbols:add-2-rounded" colour="Green" @button-clicked="openCreateRequestModalWithContext">Add</control-button>-->
-        <div ref="RequestQueue" class="h-40 resize-y overflow-y-scroll overflow-x-clip text-pretty min-h-20 w-full rounded-md bg-neutral-950 flex flex-col">
+        <div ref="RequestQueue" class="h-40 resize-y overflow-y-scroll overflow-x-clip text-pretty min-h-20 w-full rounded-sm bg-neutral-950 flex flex-col">
           <template v-if="RamiRequestManager.getRequestsByOrder && RamiRequestManager.getRequestsByOrder.length > 0">
             <request-item v-for="(requestItem, requestIndex) of RamiRequestManager.getRequestsByOrder" :request="requestItem" :current="requestIndex == RamiRequestManager.getCurrentRequest" :index="requestIndex"/>
           </template>
