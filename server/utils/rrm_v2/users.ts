@@ -80,7 +80,7 @@ export const fetchChannelInfo = defineCachedFunction(async (
         profile_image_url: data.data[0].profile_image_url,
     }
     return result
-}, {maxAge: 60 * 10})
+}, {maxAge: Number(process.env.RRM_V2_CACHE_TIMEOUT)})
 
 /**
  * Fetch all channels the channel is in a group with.
@@ -109,7 +109,7 @@ export const fetchGroupChannels = defineCachedFunction(async (channelId: string)
         }
     }
     return {groups: groups, channels: channelList}
-})
+}, {maxAge: Number(process.env.RRM_V2_CACHE_TIMEOUT)})
 
 /**
  * Returns a list of usernames and ids for channels in which the user has the moderator role.
@@ -145,7 +145,7 @@ export const fetchModeratedChannels = defineCachedFunction(async (channelId: str
         channelList.push(channelData)
     }
     return channelList
-})
+}, {maxAge: Number(process.env.RRM_V2_CACHE_TIMEOUT)})
 
 /**
  * Fetch all channels the channel has permission to interact with, such as by being a Moderator or sharing a Group.
@@ -161,4 +161,4 @@ export const fetchPermittedChannels = defineCachedFunction(async (channelId: str
         moderated: moderated || [],
         groups: groups || {},
     }
-})
+}, {maxAge: Number(process.env.RRM_V2_CACHE_TIMEOUT)})
