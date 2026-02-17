@@ -75,6 +75,9 @@ export default defineNuxtConfig({
         ]
       }
     },
+    unenv: {
+      external: ["cloudflare:workers"]
+    },
     experimental: {
       websocket: true
     }
