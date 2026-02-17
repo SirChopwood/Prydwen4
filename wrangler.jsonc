@@ -1,6 +1,6 @@
 {
     "observability": {
-        "enabled": true,
+        "enabled": true
     },
     "assets": {
         "directory": "./.output/public/",

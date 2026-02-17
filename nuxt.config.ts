@@ -23,13 +23,13 @@ export default defineNuxtConfig({
     cssLayer: 'base'
   },
   hub: {
-    db: {
-      dialect: 'sqlite',
-      driver: 'd1',
-      connection: { databaseId: '318e0a43-c098-44b1-98e1-b50b9b7d8685' },
-      migrationsDirs: [".output/server/db/migrations/sqlite/"],
-      applyMigrationsDuringBuild: false
-    },
+    // db: {
+    //   dialect: 'sqlite',
+    //   driver: 'd1',
+    //   connection: { databaseId: '318e0a43-c098-44b1-98e1-b50b9b7d8685' },
+    //   migrationsDirs: [".output/server/db/migrations/sqlite/"],
+    //   applyMigrationsDuringBuild: false
+    // },
   },
   $development: {
     hub: {
