@@ -23,13 +23,13 @@ export default defineNuxtConfig({
     cssLayer: 'base'
   },
   hub: {
-    // db: {
-    //   dialect: 'sqlite',
-    //   driver: 'd1',
-    //   connection: { databaseId: '318e0a43-c098-44b1-98e1-b50b9b7d8685' },
-    //   migrationsDirs: [".output/server/db/migrations/sqlite/"],
-    //   applyMigrationsDuringBuild: false
-    // },
+    db: {
+      dialect: 'sqlite',
+      driver: 'd1',
+      connection: { databaseId: '318e0a43-c098-44b1-98e1-b50b9b7d8685' },
+      migrationsDirs: [".output/server/db/migrations/sqlite/"],
+      applyMigrationsDuringBuild: false
+    },
   },
   $development: {
     hub: {
@@ -40,6 +40,31 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
+      wrangler: {
+        observability: {
+          enabled: true
+        },
+        assets: {
+          directory: "./.output/public/",
+          binding: "ASSETS"
+        },
+        d1_databases: [
+          {
+            binding: "DB",
+            database_id: "318e0a43-c098-44b1-98e1-b50b9b7d8685",
+            migrations_table: "_hub_migrations",
+            migrations_dir: ".output/server/db/migrations/sqlite/"
+          }
+        ],
+        durable_objects: {
+          bindings: [
+            {
+              name: "$DurableObject",
+              class_name: "$DurableObject"
+            }
+          ]
+        }
+      }
     },
     experimental: {
       websocket: true

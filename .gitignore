@@ -27,3 +27,4 @@ logs
 pnpm-lock.yaml
 
 wrongler.jsonc
+wrangler.jsonc
