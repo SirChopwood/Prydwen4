@@ -11,7 +11,8 @@ import {
 
 interface RRM_V2_Peer extends Peer {
     context: {
-        server?: RRM_V2_PanelServer
+        server?: RRM_V2_PanelServer,
+        updateTimer?: NodeJS.Timeout
     }
 }
 
@@ -23,6 +24,9 @@ export default defineWebSocketHandler({
     async open(peer: RRM_V2_Peer) {
         peer.context.server = new RRM_V2_PanelServer(peer)
         console.log("Connection Opened")
+        peer.context.updateTimer = setInterval(async () => {
+            await peer.context.server!.updateCurrentSession()
+        }, 15 * 1000)
     },
 
     async message(peer: RRM_V2_Peer, message) {

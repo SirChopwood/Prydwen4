@@ -14,7 +14,6 @@ export class RRM_V2_PanelClient {
     activeSessions: Ref<Record<string, typeof schema.RRM_V2_Sessions.$inferSelect>> = ref({})
     channelFetches: Array<string> = []
     currentSessionId: Ref<number> = ref(-1)
-    updateTimer: NodeJS.Timeout | undefined
     currentRequests: Ref<Array<typeof schema.RRM_V2_Requests.$inferSelect>> = ref([])
     currentSessionUptime: Ref<number> = ref(0)
     uptimeTimer: NodeJS.Timeout | undefined
@@ -34,10 +33,6 @@ export class RRM_V2_PanelClient {
         this.ws.addEventListener("open", async (event) => {
             console.log("Connected to Server")
             await this.sendMessage('getActiveSessions', {channelId: this.userId})
-
-            this.updateTimer = setInterval(async () => {
-                await this.sendMessage("updateCurrentSession", "")
-            }, 15 * 1000)
 
             this.uptimeTimer = setInterval(async () => {
                 await this.updateUptime()
@@ -113,9 +108,9 @@ export class RRM_V2_PanelClient {
         })
         this.ws.addEventListener("close", async (event) => {
             console.log("Disconnected from Server")
-            if (this.updateTimer) {
-                clearInterval(this.updateTimer)
-            }
+            // if (this.updateTimer) {
+            //     clearInterval(this.updateTimer)
+            // }
         })
         this.ws.addEventListener("error", async (event) => {
             console.log(`Connection Error: ${event}`)
@@ -131,9 +126,9 @@ export class RRM_V2_PanelClient {
 
     async disconnectFromServer() {
         this.ws!.close()
-        if (this.updateTimer) {
-            clearInterval(this.updateTimer)
-        }
+        // if (this.updateTimer) {
+        //     clearInterval(this.updateTimer)
+        // }
     }
 
     async sendMessage(type: string, value: any) {
