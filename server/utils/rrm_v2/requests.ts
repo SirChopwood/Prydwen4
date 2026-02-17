@@ -1,5 +1,5 @@
 import {fetchSession} from "~~/server/utils/rrm_v2/sessions";
-import {and, ne, sql} from "drizzle-orm";
+import {and, eq, ne, sql} from "drizzle-orm";
 import {inArray} from "drizzle-orm/sql/expressions/conditions";
 
 type RRM_V2_RequestData = {
@@ -53,7 +53,20 @@ export async function createRequest(
             metadata: request.metadata,
             user: user,
         }).returning()
-        return newRequest[0]!.id
+
+        if (newRequest.length > 0) {
+            try {
+                session.requests.push(newRequest[0]!.id)
+                await db.update(schema.RRM_V2_Sessions)
+                    .set({requests: session.requests})
+                    .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+                    .returning()
+                return newRequest[0]!.id
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        return
     } catch (error) {
         console.log(error)
         return

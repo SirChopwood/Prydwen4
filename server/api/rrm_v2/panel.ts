@@ -218,11 +218,16 @@ class RRM_V2_PanelServer {
         let res = await $fetch("/api/rrm_v2/request", {
             method: "POST",
             body: JSON.stringify({
-                sessionId: this.sessionId,
-                user: user,
-                codes: codes
+                "sessionId": this.sessionId,
+                "user": user,
+                "codes": codes
             })
         })
+        // {
+        //     sessionId: z.number(),
+        //         user: z.string(),
+        //     codes: z.array(z.string()).min(1)
+        // }
         if (res && res.length > 0) {
             await this.sendNotification("Request(s) Added", "green", `Added ${res.length} requests to the queue.`)
         }

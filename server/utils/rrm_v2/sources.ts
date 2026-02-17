@@ -31,15 +31,18 @@ export async function PyPy(request: string) {
             requestData.code = String(song.i)
             requestData.text = song.n
             requestData.metadata["Source"] = "PyPy"
+            // @ts-ignore
             requestData.metadata["Group"] = data.groups[song.g]
             requestData.metadata["Duration"] = String(song.e)
-            try {
-                let videoData = await FetchYouTubeVideo(song.o[0])
-                requestData.metadata["Thumbnail"] = videoData.snippet.thumbnails.default.url
-                requestData.metadata["Channel"] = videoData.snippet.channelTitle
-            } catch (e) {
-                console.log(`Error fetching YouTube Video for PyPy song ${song.i}`)
-                console.error(e)
+            if (song.o[0]) {
+                try {
+                    let videoData = await FetchYouTubeVideo(song.o[0]!)
+                    requestData.metadata["Thumbnail"] = videoData.snippet.thumbnails.default.url
+                    requestData.metadata["Channel"] = videoData.snippet.channelTitle
+                } catch (e) {
+                    console.log(`Error fetching YouTube Video for PyPy song ${song.i}`)
+                    console.log(e)
+                }
             }
             return requestData
         }
@@ -56,18 +59,21 @@ export async function PlainText(request: string) {
 }
 
 export async function YouTube(request: string) {
-    let videoData = await FetchYouTubeVideo(request)
-
-    let requestData = {
-        text: videoData.snippet.title,
-        code: `https://www.youtube.com/watch?v=${videoData.id}`,
-        metadata: {
-            "Source": "YouTube",
-            "Thumbnail": videoData.snippet.thumbnails.default.url,
-            "Channel": videoData.snippet.channelTitle
-        },
+    try {
+        let videoData = await FetchYouTubeVideo(request)
+        return {
+            text: videoData.snippet.title,
+            code: `https://www.youtube.com/watch?v=${videoData.id}`,
+            metadata: {
+                "Source": "YouTube",
+                "Thumbnail": videoData.snippet.thumbnails.default.url,
+                "Channel": videoData.snippet.channelTitle
+            },
+        }
+    } catch (e) {
+        console.log(`Error fetching YouTube Video for request ${request}}`)
+        console.log(e)
     }
-    return requestData
 }
 
 async function FetchYouTubeVideo(url: string) {
