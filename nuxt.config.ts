@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-01-01',
   vite: {
     plugins: [
-        tailwindcss(),
+        tailwindcss()
     ],
   },
   css: ['./app/assets/css/main.css'],
@@ -37,6 +37,7 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
+    preset: "cloudflare-durable",
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
