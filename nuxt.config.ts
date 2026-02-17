@@ -63,7 +63,15 @@ export default defineNuxtConfig({
               class_name: "$DurableObject"
             }
           ]
-        }
+        },
+        migrations: [
+          {
+            tag: "v1",
+            new_sqlite_classes: [
+              "$DurableObject"
+            ]
+          }
+        ]
       }
     },
     experimental: {
