@@ -11,8 +11,16 @@ export const RRM_V2_Sessions = sqliteTable("RRM_V2_Sessions", {
         .default([]) // Array of RRM_Request ids
         .notNull(),
 
-    status: text({enum: ["Open", "Closed", "Locked"]})
+    sessionState: text({enum: ["Open", "Closed"]})
         .default("Open")
+        .notNull(),
+
+    requestState: text({enum: ["Unlocked", "Locked"]})
+        .default("Locked")
+        .notNull(),
+
+    message: text()
+        .default("")
         .notNull(),
 
     sources: text({mode: "json"})
@@ -20,17 +28,17 @@ export const RRM_V2_Sessions = sqliteTable("RRM_V2_Sessions", {
         .default(["PlainText"])
         .notNull(),
 
-    startTime: text()
+    startTime: integer()
         .notNull(),
 
-    endTime: text(),
+    endTime: integer(),
 
     lastUser: text()
         .notNull(),
 
     channels: text({mode: "json"})
-        .$type<Array<RRM_V2_TwitchChannel>>()
-        .default([]) // Twitch Account Infos
+        .$type<Array<string>>()
+        .default([]) // Array of twitch account IDs
         .notNull(),
 
     position: integer()
@@ -49,7 +57,7 @@ export const RRM_V2_Requests = sqliteTable("RRM_V2_Requests", {
     sessionId: integer()
         .notNull(),
 
-    timestamp: text()
+    timestamp: integer()
         .notNull(),
 
     text: text()

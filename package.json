@@ -1,35 +1,29 @@
 {
-  "name": "nuxt-app",
-  "type": "module",
+  "name": "nuxt-portfolio-template",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "wrangle": "nuxt build && wrangler dev"
+    "db": "nuxt db generate",
+    "prepare": "nuxt prepare"
   },
   "dependencies": {
-    "@libsql/client": "^0.15.15",
-    "@nuxt/content": "^3.9.0",
+    "@libsql/client": "^0.17.0",
+    "@nuxt/content": "^3.10.0",
     "@nuxt/fonts": "^0.12.1",
-    "@nuxt/icon": "^2.1.0",
+    "@nuxt/icon": "^2.2.1",
     "@nuxt/image": "^2.0.0",
-    "@nuxthub/core": "^0.10.0",
-    "@tailwindcss/vite": "^4.1.17",
+    "@nuxthub/core": "^0.10.4",
+    "@tailwindcss/vite": "^4.1.18",
     "better-sqlite3": "^12.5.0",
-    "chart.js": "^4.5.1",
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
-    "front-matter": "^4.0.2",
-    "nuxt": "^4.2.2",
-    "nuxt-auth-utils": "^0.5.26",
-    "tailwindcss": "^4.1.17",
-    "vue": "^3.5.25",
-    "vue-chartjs": "^5.3.3",
-    "vue-router": "^4.6.3",
-    "wrangler": "^4.54.0"
+    "nuxt": "^4.3.0",
+    "nuxt-auth-utils": "^0.5.27",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@iconify-json/file-icons": "^1.2.2",

@@ -47,13 +47,13 @@ export async function createRequest(
     try {
         let newRequest = await db.insert(schema.RRM_V2_Requests).values({
             sessionId: sessionId,
-            timestamp: new Date().toISOString(),
+            timestamp: new Date().getTime(),
             text: request.text,
             code: request.code,
             metadata: request.metadata,
             user: user,
         }).returning()
-        return newRequest[0].id
+        return newRequest[0]!.id
     } catch (error) {
         console.log(error)
         return
@@ -65,7 +65,7 @@ export async function createRequest(
  * @param {Array<number>} requestIds - Unique ID of the session
  * @returns {Array<typeof schema.RRM_V2_Requests.$inferSelect>} - Session Info
  */
-export const fetchRequests = defineCachedFunction(async (requestIds: Array<number>) => {
+export async function fetchRequests(requestIds: Array<number>) {
     if (requestIds.length < 0) {return}
 
     let session: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
@@ -80,4 +80,4 @@ export const fetchRequests = defineCachedFunction(async (requestIds: Array<numbe
     }
 
     return session
-}, {maxAge: Number(process.env.RRM_V2_CACHE_TIMEOUT)})
+}

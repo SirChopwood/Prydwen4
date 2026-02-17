@@ -33,7 +33,7 @@ useSeoMeta({
 </template>
 
 <style>
-@reference "./assets/css/tailwind.css";
+@reference "./assets/css/main.css";
 
 html {
   @apply scrollbar scrollbar-thumb-neutral-700 scrollbar-track-neutral-900 scrollbar-corner-neutral-800 scroll-pt-8 scroll-smooth;

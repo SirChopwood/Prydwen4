@@ -19,10 +19,10 @@ export default defineComponent({
       <codeblock-button link="/#Projects" class="block">Portfolio</codeblock-button>
       <codeblock-button link="/about/">About Me</codeblock-button>
       <codeblock-button link="https://docs.google.com/document/d/e/2PACX-1vQR2-kWrB2AP7P29yfiA-OwDLkR5eT111ehCQF7gYD34HVrIs-DNCjhvSAPOfguYAmLlzhaz_YHUA9Z/pub">My CV</codeblock-button>
-      <codeblock-button link="https://x.com/LouisMayes2001">
+      <codeblock-button link="https://x.com/LouisMayes2001" class="size-7 text-center">
         <icon name="mdi:twitter" class="size-6 fill-neutral-400 hover:fill-neutral-200"/>
       </codeblock-button>
-      <codeblock-button link="https://www.linkedin.com/in/louismayes/">
+      <codeblock-button link="https://www.linkedin.com/in/louismayes/" class="size-7 text-center">
         <icon name="mdi:linkedin" class="size-6 fill-neutral-400 hover:fill-neutral-200"/>
       </codeblock-button>
     </div>

@@ -1,0 +1,190 @@
+import type {schema} from "#build/types/nitro-imports";
+
+export function usePanelClient(modalManager: ModalManager) {
+    return new RRM_V2_PanelClient(modalManager)
+}
+
+export class RRM_V2_PanelClient {
+    modalManager: ModalManager
+    ws: WebSocket | null = null
+    userId: string = ""
+    groups: Ref<Array<typeof schema.RRM_V2_Groups.$inferSelect>> = ref([]) // Groups containing Channel IDs
+    moderated: Ref<Array<string>> = ref([]) // Channel IDs
+    channels: Ref<Record<string, RRM_V2_TwitchChannel>> = ref({}) // converts IDs to channel info
+    activeSessions: Ref<Record<string, typeof schema.RRM_V2_Sessions.$inferSelect>> = ref({})
+    channelFetches: Array<string> = []
+    currentSessionId: Ref<number> = ref(-1)
+    updateTimer: NodeJS.Timeout | undefined
+    currentRequests: Ref<Array<typeof schema.RRM_V2_Requests.$inferSelect>> = ref([])
+    currentSessionUptime: Ref<number> = ref(0)
+    uptimeTimer: NodeJS.Timeout | undefined
+
+    constructor(modalManager: ModalManager) {
+        this.modalManager = modalManager
+        console.log("RRM V2 Panel Client")
+    }
+
+    isConnected = computed(() => {
+        return this.ws?.readyState == WebSocket.OPEN
+    })
+
+    async connectToServer() {
+        if (this.ws) {return}
+        this.ws = new WebSocket("/api/rrm_v2/panel")
+        this.ws.addEventListener("open", async (event) => {
+            console.log("Connected to Server")
+            await this.sendMessage('getActiveSessions', {channelId: this.userId})
+
+            this.updateTimer = setInterval(async () => {
+                await this.sendMessage("updateCurrentSession", "")
+            }, 15 * 1000)
+
+            this.uptimeTimer = setInterval(async () => {
+                await this.updateUptime()
+            }, 500)
+        })
+
+        this.ws.addEventListener("message", async (event) => {
+            let msg: {type: string, value: any} = JSON.parse(event.data)
+            if (!msg.type) {
+                console.log(`Unknown message: ${msg}`)
+                return
+            }
+
+            console.log(`Processing Message: ${msg.type}`)
+            try {
+                switch (msg.type) {
+                    case "getPermittedChannels":
+                        let data = JSON.parse(msg.value)
+                        this.groups.value = data.groups
+                        this.moderated.value = data.moderated
+                        for (const channel of Object.values(data.channels) as Array<RRM_V2_TwitchChannel>) {
+                            this.channels.value[channel.id] = channel
+                        }
+                        break
+                    case "getActiveSessions":
+                        if (msg.value) {
+                            this.activeSessions.value = {}
+                            for (const session of JSON.parse(msg.value)) {
+                                this.activeSessions.value[session.id] = session
+                            }
+                            if (this.currentSessionId.value === -1) {
+                                let savedSessionId = localStorage.getItem("RRM_V2_CurrentSessionId")
+                                if (Number(savedSessionId)) {
+                                    console.log(`Loading saved Session ID: ${savedSessionId}`)
+                                    await this.setCurrentSession(Number(savedSessionId))
+                                }
+                            }
+                        }
+                        break
+                    case "fetchChannelById":
+                        let channel = JSON.parse(msg.value)
+                        if (channel) {
+                            this.channels.value[channel.id] = channel
+                            this.channelFetches.splice(this.channelFetches.indexOf(channel.id), 1)
+                        }
+                        break
+                    case "updateCurrentSession":
+                        let session = JSON.parse(msg.value)
+                        if (msg.value !== JSON.stringify(this.activeSessions.value[session.id])) {
+                            this.activeSessions.value[session.id] = session
+                            console.log("Session Updated")
+                        }
+                        break
+                    case "updateCurrentRequests":
+                        let requests = JSON.parse(msg.value)
+                        if (msg.value !== JSON.stringify(this.currentRequests.value)) {
+                            this.currentRequests.value = requests
+                            console.log("Requests Updated")
+                        }
+                        break
+                    case "sendNotification":
+                        let notification = JSON.parse(msg.value)
+                        await this.modalManager.showNotification(notification.title, notification.colour, notification.message)
+                        break
+                    default:
+                        console.log(`Unknown type: ${msg.type}`)
+                        break
+                }
+            } catch (e) {
+                console.log(e)
+            }
+            return
+        })
+        this.ws.addEventListener("close", async (event) => {
+            console.log("Disconnected from Server")
+            if (this.updateTimer) {
+                clearInterval(this.updateTimer)
+            }
+        })
+        this.ws.addEventListener("error", async (event) => {
+            console.log(`Connection Error: ${event}`)
+        })
+    }
+
+    async updateUptime() {
+        if (this.getCurrentSession.value) {
+            this.currentSessionUptime.value = Math.floor(new Date().getTime() - this.getCurrentSession.value.startTime) / 1000
+        }
+        this.currentSessionUptime.value = 0
+    }
+
+    async disconnectFromServer() {
+        this.ws!.close()
+        if (this.updateTimer) {
+            clearInterval(this.updateTimer)
+        }
+    }
+
+    async sendMessage(type: string, value: any) {
+        this.ws?.send(JSON.stringify({type: type, value: value}))
+    }
+
+    async getChannelById(channelId: string) {
+        if (this.channels.value[channelId]) {
+            return this.channels.value[channelId]
+        } else {
+            await this.fetchChannelById(channelId)
+            return
+        }
+    }
+
+    async fetchChannelById(channelId: string) {
+        if (this.channelFetches.includes(channelId)) {
+            return
+        }
+        this.channelFetches.push(channelId)
+        await this.sendMessage("fetchChannelById", {channelId: channelId})
+        return
+    }
+
+    async setCurrentSession(sessionId: number) {
+        this.currentSessionId.value = sessionId
+        localStorage.setItem("RRM_V2_CurrentSessionId", String(sessionId))
+        await this.sendMessage("setCurrentSession", {sessionId: sessionId})
+    }
+
+    getCurrentSession = computed(() => {
+        return this.activeSessions.value[String(this.currentSessionId.value)]
+    })
+
+    getCurrentRequestQueue = computed(() => {
+        let currentSession = this.getCurrentSession.value
+        if (!currentSession) {return []}
+
+        let queue = []
+        for (let requestId of currentSession.requests) {
+            let request = this.currentRequests.value.find((request) => {
+                return requestId === request.id
+            })
+            if (request) {
+                queue.push(request)
+            }
+        }
+        return queue
+    })
+
+    getUptime = computed(() => {
+        return this.currentSessionUptime.value
+    })
+}

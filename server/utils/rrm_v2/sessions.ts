@@ -26,20 +26,26 @@ export async function createSession(
     let channelInfo: Array<RRM_V2_TwitchChannel> = []
     for (let channel of channels) {
         let info = await fetchChannelInfo(channel)
-        if (info) {
-            channelInfo.push(info)
+        if (!info) {
+            console.log(`Could not find channel: ${channel}`)
+            return
         }
     }
 
     try {
         let newSession = await db.insert(schema.RRM_V2_Sessions).values({
-            startTime: new Date().toISOString(),
+            startTime: new Date().getTime(),
             lastUser: hostInfo.display_name,
-            status: "Open",
-            channels: channelInfo,
+            sessionState: "Open",
+            channels: channels,
             sources: sources,
         }).returning()
-        return newSession[0].id
+        if (newSession) {
+            return newSession[0]!.id
+        } else {
+            return
+        }
+
     } catch (error) {
         console.log(error)
         return
@@ -52,7 +58,7 @@ export async function createSession(
  * @param {number} channelId - Twitch Channel ID
  * @returns {schema.RRM_V2_Sessions.$inferSelect || undefined} - Session Info
  */
-export const fetchSession = defineCachedFunction(async (sessionId?: number, channelId?: string) => {
+export async function fetchSession(sessionId?: number, channelId?: string) {
     if (!sessionId && !channelId) {return}
 
     let session: typeof schema.RRM_V2_Sessions.$inferSelect | undefined = undefined
@@ -72,7 +78,7 @@ export const fetchSession = defineCachedFunction(async (sessionId?: number, chan
         let sessionQuery = await db.select().from(schema.RRM_V2_Sessions).where(
             and(
                 sql`(SELECT 1 FROM json_each(channels) WHERE (value = ${channelId}))`, // Iterate through channels to see if one matches
-                ne(schema.RRM_Session.status, "Closed")
+                ne(schema.RRM_V2_Sessions.sessionState, "Closed")
             )
         )
         if (sessionQuery && sessionQuery[0] !== null) {
@@ -80,4 +86,158 @@ export const fetchSession = defineCachedFunction(async (sessionId?: number, chan
         }
     }
     return session
-}, {maxAge: Number(process.env.RRM_V2_CACHE_TIMEOUT)})
+}
+
+
+/**
+ * Fetch a session by its ID or a Twitch Channel ID.
+ * @param {number} channelId - Twitch Channel ID
+ * @returns {Array<typeof schema.RRM_V2_Sessions.$inferSelect>} - Session Info
+ */
+export async function fetchChannelSessions(channelId: string) {
+    if (!channelId) {return []}
+
+    let session: Array<typeof schema.RRM_V2_Sessions.$inferSelect> = []
+
+    let sessionQuery = await db.select().from(schema.RRM_V2_Sessions).where(
+        and(
+            sql`(SELECT 1 FROM json_each(channels) WHERE (value = ${channelId}))`, // Iterate through channels to see if one matches
+            ne(schema.RRM_V2_Sessions.sessionState, "Closed")
+        )
+    )
+    if (sessionQuery && sessionQuery[0] !== null) {
+        session = sessionQuery
+    }
+
+    return session
+}
+
+/**
+ * Toggle if a session should allow more requests to be made.
+ * @param {number} sessionId - Unique ID of the session
+ * @param {boolean} enabled - If it should allow more requests
+ * @returns {boolean} - If the update was successful
+ */
+export async function updateRequestState(sessionId: number, enabled: boolean) {
+    if (!sessionId) {return false}
+    let session= await fetchSession(sessionId)
+    if (!session) {return false}
+
+    try {
+        await db.update(schema.RRM_V2_Sessions)
+            .set({requestState: enabled ? "Unlocked" : "Locked"})
+            .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+            .returning()
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+    return false
+}
+
+
+/**
+ * Toggle if a session should allow more requests to be made.
+ * @param {number} sessionId - Unique ID of the session
+ * @param {boolean} open - If the session is still active
+ * @returns {boolean} - If the update was successful
+ */
+export async function updateSessionState(sessionId: number, open: boolean) {
+    if (!sessionId) {return false}
+    let session= await fetchSession(sessionId)
+    if (!session) {return false}
+
+    try {
+        await db.update(schema.RRM_V2_Sessions)
+            .set({sessionState: open ? "Open" : "Closed"})
+            .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+            .returning()
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+    return false
+}
+
+/**
+ * Update the currently active request in the queue.
+ * @returns {boolean} - If the update was successful
+ * @param sessionId
+ * @param index
+ */
+export async function updatePosition(sessionId: number, index: number) {
+    if (!sessionId) {return false}
+    let session= await fetchSession(sessionId)
+    if (!session) {return false}
+    try {
+        await db.update(schema.RRM_V2_Sessions)
+            .set({position: index})
+            .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+            .returning()
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+    return false
+}
+
+/**
+ * Reposition a request in the queue.
+ * @returns {boolean} - If the update was successful
+ * @param sessionId
+ * @param fromIndex
+ * @param toIndex
+ */
+export async function moveRequest(sessionId: number, fromIndex: number, toIndex: number) {
+    if (!sessionId) {return false}
+    let session= await fetchSession(sessionId)
+    if (!session) {return false}
+
+    try {
+        // https://www.npmjs.com/package/array-move
+        let array = session.requests
+        const startIndex = fromIndex < 0 ? array.length + fromIndex : fromIndex;
+
+        if (startIndex >= 0 && startIndex < array.length) {
+            const endIndex = toIndex < 0 ? array.length + toIndex : toIndex;
+
+            const [item] = array.splice(fromIndex, 1);
+            array.splice(endIndex, 0, item!);
+        }
+
+        await db.update(schema.RRM_V2_Sessions)
+            .set({requests: array})
+            .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+            .returning()
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+    return false
+}
+
+/**
+ * Removes a request from the queue.
+ * @returns {boolean} - If the update was successful
+ * @param sessionId
+ * @param index
+ */
+export async function removeRequest(sessionId: number, index: number) {
+    if (!sessionId) {return false}
+    let session= await fetchSession(sessionId)
+    if (!session) {return false}
+
+    try {
+        let array = session.requests
+        array.splice(index, 0)
+
+        await db.update(schema.RRM_V2_Sessions)
+            .set({requests: array})
+            .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+            .returning()
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+    return false
+}

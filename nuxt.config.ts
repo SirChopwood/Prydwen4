@@ -1,23 +1,41 @@
 import tailwindcss from "@tailwindcss/vite";
-import * as trace_events from "node:trace_events";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
   modules: [
     '@nuxt/content',
     '@nuxthub/core',
+    'nuxt-auth-utils',
     '@nuxt/image',
-    '@nuxt/icon',
     '@nuxt/fonts',
-    'nuxt-auth-utils'
+    '@nuxt/icon'
   ],
-  routeRules: {
-    "/rrm/**": {ssr: false}
+  devtools: { enabled: true },
+  compatibilityDate: '2026-01-01',
+  vite: {
+    plugins: [
+        tailwindcss(),
+    ],
+  },
+  css: ['./app/assets/css/main.css'],
+  icon: {
+    mode: 'css',
+    cssLayer: 'base'
+  },
+  hub: {
+    db: {
+      dialect: 'sqlite',
+      driver: 'd1',
+      connection: { databaseId: 'cefba871-7dfd-4a4c-b1cb-1c3b10516b62' },
+      migrationsDirs: [".output/server/db/migrations/sqlite/"],
+    },
+  },
+  $development: {
+    hub: {
+      db: "sqlite"
+    }
   },
   nitro: {
-    preset: "cloudflare-durable",
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
@@ -32,7 +50,7 @@ export default defineNuxtConfig({
         d1_databases: [
           {
             binding: 'DB',
-            database_id: '0aaa1682-dbee-49af-a1d8-68299824e654',
+            database_id: 'cefba871-7dfd-4a4c-b1cb-1c3b10516b62',
             migrations_table: "_hub_migrations",
             migrations_dir: ".output/server/db/migrations/sqlite/",
           }
@@ -48,37 +66,10 @@ export default defineNuxtConfig({
       }
     },
     experimental: {
-      openAPI: true,
       websocket: true
-    },
-    storage: {
-      db: {
-        driver: 'fs',
-        base: './.data/db'
-      }
     }
   },
-  css: ['./app/assets/css/tailwind.css'],
-  vite: {
-    plugins: [
-        tailwindcss(),
-    ],
-  },
-  hub: {
-    db: {
-      dialect: 'sqlite',
-      driver: 'd1',
-      connection: { databaseId: '0aaa1682-dbee-49af-a1d8-68299824e654' },
-      migrationsDirs: [".output/server/db/migrations/sqlite/"],
-    },
-  },
-  $development: {
-    hub: {
-      db: "sqlite"
-    }
-  },
-  icon: {
-    mode: 'css',
-    cssLayer: 'base'
+  routeRules: {
+    '.**': { prerender: false }
   }
 })
