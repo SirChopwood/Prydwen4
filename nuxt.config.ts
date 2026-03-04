@@ -23,65 +23,72 @@ export default defineNuxtConfig({
     mode: 'css',
     cssLayer: 'base'
   },
-  hub: {
-    db: {
-      dialect: 'sqlite',
-      driver: 'd1',
-      connection: { databaseId: '318e0a43-c098-44b1-98e1-b50b9b7d8685' },
-      migrationsDirs: [".output/server/db/migrations/sqlite/"],
-      applyMigrationsDuringBuild: false
-    },
-  },
   $development: {
     hub: {
       db: "sqlite"
+    },
+    nitro: {
+      experimental: {
+        websocket: true
+      }
     }
   },
-  nitro: {
-    preset: "cloudflare-durable",
-    cloudflare: {
-      deployConfig: true,
-      nodeCompat: true,
-      wrangler: {
-        observability: {
-          enabled: true
-        },
-        assets: {
-          directory: "./.output/public/",
-          binding: "ASSETS"
-        },
-        d1_databases: [
-          {
-            binding: "DB",
-            database_id: "318e0a43-c098-44b1-98e1-b50b9b7d8685",
-            migrations_table: "_hub_migrations",
-            migrations_dir: ".output/server/db/migrations/sqlite/"
-          }
-        ],
-        durable_objects: {
-          bindings: [
+  $production: {
+    hub: {
+      db: {
+        dialect: 'sqlite',
+        driver: 'd1',
+        connection: { databaseId: '318e0a43-c098-44b1-98e1-b50b9b7d8685' },
+        migrationsDirs: [".output/server/db/migrations/sqlite/"],
+        applyMigrationsDuringBuild: false
+      },
+    },
+    nitro: {
+      preset: "cloudflare-durable",
+      cloudflare: {
+        deployConfig: true,
+        nodeCompat: true,
+        wrangler: {
+          observability: {
+            enabled: true
+          },
+          assets: {
+            directory: "./.output/public/",
+            binding: "ASSETS"
+          },
+          d1_databases: [
             {
-              name: "$DurableObject",
-              class_name: "$DurableObject"
+              binding: "DB",
+              database_id: "318e0a43-c098-44b1-98e1-b50b9b7d8685",
+              migrations_table: "_hub_migrations",
+              migrations_dir: ".output/server/db/migrations/sqlite/"
+            }
+          ],
+          durable_objects: {
+            bindings: [
+              {
+                name: "$DurableObject",
+                class_name: "$DurableObject"
+              }
+            ]
+          },
+          migrations: [
+            {
+              tag: "v1",
+              new_sqlite_classes: [
+                "$DurableObject"
+              ]
             }
           ]
-        },
-        migrations: [
-          {
-            tag: "v1",
-            new_sqlite_classes: [
-              "$DurableObject"
-            ]
-          }
-        ]
+        }
+      },
+      unenv: {
+        external: ["cloudflare:workers"]
+      },
+      experimental: {
+        websocket: true
       }
     },
-    unenv: {
-      external: ["cloudflare:workers"]
-    },
-    experimental: {
-      websocket: true
-    }
   },
   routeRules: {
     '.**': { prerender: false }

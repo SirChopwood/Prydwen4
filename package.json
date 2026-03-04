@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "db": "nuxt db generate",
-    "prepare": "nuxt prepare"
+    "prepare": "nuxt prepare",
+    "migrate": "nuxt db migrate"
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",
@@ -16,7 +17,7 @@
     "@nuxt/fonts": "^0.12.1",
     "@nuxt/icon": "^2.2.1",
     "@nuxt/image": "^2.0.0",
-    "@nuxthub/core": "^0.10.4",
+    "@nuxthub/core": "https://pkg.pr.new/@nuxthub/core@759",
     "@tailwindcss/vite": "^4.1.18",
     "better-sqlite3": "^12.5.0",
     "drizzle-kit": "^0.31.8",
