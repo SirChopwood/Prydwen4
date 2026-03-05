@@ -120,8 +120,9 @@ export class RRM_V2_PanelClient {
     async updateUptime() {
         if (this.getCurrentSession.value) {
             this.currentSessionUptime.value = Math.floor(new Date().getTime() - this.getCurrentSession.value.startTime) / 1000
+        } else {
+            this.currentSessionUptime.value = 0
         }
-        this.currentSessionUptime.value = 0
     }
 
     async disconnectFromServer() {

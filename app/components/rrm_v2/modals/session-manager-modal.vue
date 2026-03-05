@@ -3,6 +3,7 @@ import ModalTemplate from "~/components/rrm_v2/modals/modal-template.vue";
 import GenericButton from "~/components/rrm_v2/generic-button.vue";
 import SessionCreationModal from "~/components/rrm_v2/modals/session-creation-modal.vue";
 import TwitchChannelWidget from "~/components/rrm_v2/widgets/twitch-channel-widget.vue";
+import DurationEmbed from "~/components/rrm_v2/duration-embed.vue";
 
 const props = defineProps({
   name: {
@@ -28,6 +29,10 @@ let selectionSession = () => {
 async function saveAndClose() {
   await props.client.setCurrentSession(selectionId.value)
   await props.modalManager.hideModal(props.name)
+}
+
+function getTimeSinceCreation() {
+  return Math.floor(new Date().getTime() - selectionSession()!.startTime) / 1000
 }
 
 onMounted(async () => {
@@ -62,7 +67,7 @@ onMounted(async () => {
         <div v-for="source of selectionSession()!.sources" class="codeblock">{{source}}</div>
       </div>
       <div class="">ID: <span v-if="selectionSession()" class="codeblock">{{selectionSession()!.id}}</span></div>
-      <div class="">Creation Date/Time: <span v-if="selectionSession()" class="codeblock">{{String(selectionSession()!.startTime).replace("T", " ").replace("Z", "").replaceAll('"', '')}}</span></div>
+      <div class="flex flex-row flex-nowrap gap-2">Time since Creation: <duration-embed v-if="selectionSession()" :seconds="getTimeSinceCreation()" longform/></div>
       <div class="flex flex-row flex-wrap gap-4" v-if="selectionSession()" >
         <div class="h-fit">Participating Channels:</div>
         <twitch-channel-widget v-for="channel of selectionSession()!.channels" :client="client" :channel-id="channel"/>

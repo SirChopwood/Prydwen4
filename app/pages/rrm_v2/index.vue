@@ -82,8 +82,7 @@ onBeforeUnmount(async () => {
         <!--  SESSION INFO WIDGET  -->
         <control-category-widget header="Session Info">
           <div class="w-full flex flex-col gap-4" v-if="client.isCurrentSessionValid.value">
-            <div class="flex flex-row flex-wrap gap-2">Uptime {{client.getUptime.value}} <duration-embed :seconds="client.getUptime.value" longform/></div>
-            <duration-embed :seconds="12345679" longform/>
+            <div class="flex flex-row flex-wrap gap-2">Uptime: <duration-embed :seconds="client.getUptime.value" longform/></div>
             <div class="flex flex-row flex-wrap gap-2">
               <div class="h-fit">Sources:</div>
               <div v-for="source of client.getCurrentSession.value?.sources" class="codeblock">{{source}}</div>
