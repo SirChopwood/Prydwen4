@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RequestInfoModal from "~/components/rrm_v2/modals/request-info-modal.vue";
+import DurationEmbed from "~/components/rrm_v2/duration-embed.vue";
 
 const props = defineProps({
   client: {
@@ -78,9 +79,19 @@ function getCodeText() {
 function getSourceText() {
   switch (props.item.metadata['Source']) {
     case "YouTube":
-      return `${props.item.metadata['Channel']} [YouTube]`
+      if (props.item.metadata['Channel']) {
+        return `${props.item.metadata['Channel']} [YouTube]`
+      } else {
+        return `Unknown Channel [YouTube]`
+      }
     case "PyPy":
-      return `${props.item.metadata['Channel']} [PyPy]`
+      if (props.item.metadata['Channel']) {
+        return `${props.item.metadata['Channel']} [YouTube via PyPy]`
+      } else if (props.item.metadata['Group']) {
+        return `[PyPy]`
+      } else {
+        return `Unknown Channel [PyPy]`
+      }
     case "PlainText":
       return `Plain Text Message`
     default:
@@ -91,32 +102,42 @@ function getSourceText() {
 
 <template>
   <div class="group flex flex-col transition-all duration-200">
-    <div class="relative bg-neutral-900 group-hover:bg-neutral-800 w-full flex flex-row rounded border overflow-clip drop-shadow-2xl" :class="{
+    <div class="relative bg-neutral-900 group-hover:bg-neutral-800 px-1 py-0.5 w-full flex flex-row rounded border overflow-clip drop-shadow-2xl" :class="{
       'border-primary': selected,
-      'h-24': selected,
       'border-neutral-700': !selected,
       'group-hover:border-neutral-600': !selected
     }">
       <div class="grow flex flex-col p-1">
-        <div class="text-primary" :class="{
+        <div class="text-primary underline-offset-4" :class="{
         'text-2xl': selected,
+        'underline': selected,
         'text-lg': !selected
         }">
           {{item.text}}
         </div>
-        <div class="flex flex-row gap-2 divide-neutral-700 divide-x *:pr-2">
+        <div class="flex  gap-2 divide-neutral-700 *:pr-2" :class="{
+          'flex-row': !selected,
+          'divide-x': !selected,
+          'text-sm': !selected,
+          'flex-col': selected,
+          'text-base': selected
+        }">
           <div>
             Requested by <span class="text-secondary">{{item.user}}</span>
           </div>
           <div>
             Source: <span class="text-secondary">{{getSourceText()}}</span>
           </div>
-          <div v-if="!selected">
-            Code: <span @click="copyCodeToClipboard" title="Click to Copy" class="text-sm codeblock w-fit inline-block hover:text-white hover:cursor-copy">{{getCodeText()}}</span>
+          <div v-if="props.item.metadata['Group']">
+            Group: <span class="text-secondary">{{props.item.metadata['Group']}}</span>
           </div>
-        </div>
-        <div v-if="selected">
-          Code: <span @click="copyCodeToClipboard" class="text-sm codeblock w-fit inline-block hover:text-white hover:cursor-copy">{{item.code}}</span>
+          <div v-if="props.item.metadata['Duration']" class="flex flex-row flex-nowrap gap-1">
+            <div>Duration: </div>
+            <duration-embed :seconds="props.item.metadata['Duration']" class="text-secondary"/>
+          </div>
+          <div>
+            Code: <span @click="copyCodeToClipboard" title="Click to Copy" class="codeblock w-fit inline-block hover:text-white hover:cursor-copy">{{selected ? item.code : getCodeText()}}</span>
+          </div>
         </div>
       </div>
       <div class="flex flex-row gap-4 p-1 h-fit text-2xl bg-black/70 rounded-bl drop-shadow transition-all duration-200 opacity-0 group-hover:opacity-100">
