@@ -60,7 +60,7 @@ export class RRM_V2_PanelClient {
                         let heartbeat = JSON.parse(msg.value)
                         this.pingUpload.value = Math.abs(heartbeat.server - heartbeat.client)
                         this.pingDownload.value = Math.abs(new Date().getTime() - heartbeat.server)
-                        console.debug(`Received heartbeat. (${this.pingUpload}ms | ${this.pingDownload}ms)`)
+                        console.debug(`Received Heartbeat (${this.pingUpload.value}ms | ${this.pingDownload.value}ms)`)
                         break
                     case "getPermittedChannels":
                         let data = JSON.parse(msg.value)
@@ -94,7 +94,7 @@ export class RRM_V2_PanelClient {
                         break
                     case "updateCurrentSession":
                         let session = JSON.parse(msg.value)
-                        console.debug(`Incoming Session: ${session}`)
+                        console.debug(`Incoming Session: ${msg.value}`)
                         if (msg.value !== JSON.stringify(this.activeSessions.value[session.id])) {
                             this.activeSessions.value[session.id] = session
                             console.log("Session Updated")
@@ -102,7 +102,7 @@ export class RRM_V2_PanelClient {
                         break
                     case "updateCurrentRequests":
                         let requests = JSON.parse(msg.value)
-                        console.debug(`Incoming Requests: ${requests}`)
+                        console.debug(`Incoming Requests: ${msg.value}`)
                         if (msg.value !== JSON.stringify(this.currentRequests.value)) {
                             this.currentRequests.value = requests
                             console.log("Requests Updated")
@@ -110,7 +110,7 @@ export class RRM_V2_PanelClient {
                         break
                     case "sendNotification":
                         let notification = JSON.parse(msg.value)
-                        console.debug(`Incoming Notification: ${notification}`)
+                        console.debug(`Incoming Notification: ${msg.value}`)
                         await this.modalManager.showNotification(notification.title, notification.colour, notification.message)
                         break
                     default:

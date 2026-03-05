@@ -63,8 +63,8 @@ onBeforeUnmount(async () => {
       <div
           class="inline-block new-codeblock w-40 text-neutral-400"
           :class="{
-        'text-red-400': (client.pingUpload.value > 400 || client.pingDownload.value > 400),
-        'text-amber-400': (client.pingUpload.value > 200 || client.pingDownload.value > 200),
+        'text-amber-400': client.pingUpload.value > 200 || client.pingDownload.value > 200,
+        'text-red-400': client.pingUpload.value > 400 || client.pingDownload.value > 400,
       }">
         {{client.pingUpload}} <icon name="mdi:upload" class="translate-0.5"/>
         {{client.pingDownload}} <icon name="mdi:download" class="translate-0.5"/>
