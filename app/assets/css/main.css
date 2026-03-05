@@ -104,6 +104,10 @@
     @apply bg-neutral-800 outline outline-neutral-700 rounded-xs px-0.5 text-neutral-400 font-jetbrains
 }
 
+@utility new-codeblock {
+    @apply border rounded border-neutral-700 bg-black/40 px-1 font-jetbrains h-fit text-neutral-400
+}
+
 @utility tooltip {
     @apply invisible absolute rounded-xs bg-neutral-900 border-2 border-secondary inset-0 p-0.5 h-fit translate-y-8 hover:visible hover:z-50
 }

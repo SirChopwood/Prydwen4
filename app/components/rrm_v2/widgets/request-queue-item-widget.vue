@@ -110,10 +110,9 @@ function getSourceText() {
       <div class="grow flex flex-col p-1">
         <div class="text-primary underline-offset-4" :class="{
         'text-2xl': selected,
-        'underline': selected,
         'text-lg': !selected
         }">
-          {{item.text}}
+          <span class="new-codeblock text-secondary">{{(index + 1)}}</span> <span :class="{'underline': selected}">{{item.text}}</span>
         </div>
         <div class="flex  gap-2 divide-neutral-700 *:pr-2" :class="{
           'flex-row': !selected,
@@ -123,20 +122,20 @@ function getSourceText() {
           'text-base': selected
         }">
           <div>
-            Requested by <span class="text-secondary">{{item.user}}</span>
+            Requested by <span class="text-neutral-400 group-hover:text-secondary">{{item.user}}</span>
           </div>
           <div>
-            Source: <span class="text-secondary">{{getSourceText()}}</span>
+            Source: <span class="text-neutral-400 group-hover:text-secondary">{{getSourceText()}}</span>
           </div>
           <div v-if="props.item.metadata['Group']">
-            Group: <span class="text-secondary">{{props.item.metadata['Group']}}</span>
+            Group: <span class="text-neutral-400 group-hover:text-secondary">{{props.item.metadata['Group']}}</span>
           </div>
           <div v-if="props.item.metadata['Duration']" class="flex flex-row flex-nowrap gap-1">
             <div>Duration: </div>
-            <duration-embed :seconds="props.item.metadata['Duration']" class="text-secondary"/>
+            <duration-embed :seconds="props.item.metadata['Duration']" class=""/>
           </div>
           <div>
-            Code: <span @click="copyCodeToClipboard" title="Click to Copy" class="codeblock w-fit inline-block hover:text-white hover:cursor-copy">{{selected ? item.code : getCodeText()}}</span>
+            Code: <span @click="copyCodeToClipboard" title="Click to Copy" class="new-codeblock w-fit inline-block text-neutral-400 group-hover:text-secondary hover:text-primary hover:cursor-copy">{{selected ? item.code : getCodeText()}}</span>
           </div>
         </div>
       </div>

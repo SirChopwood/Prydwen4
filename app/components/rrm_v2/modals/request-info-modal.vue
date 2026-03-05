@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ModalTemplate from "~/components/rrm_v2/modals/modal-template.vue";
+import DurationEmbed from "~/components/rrm_v2/duration-embed.vue";
 
 const props = defineProps({
   name: {
@@ -40,10 +41,16 @@ function getDuration() {
     <div class="flex flex-row w-full h-fit gap-4">
       <div class="flex flex-col p-1 gap-2 grow">
         <div class="text-xl text-primary">{{request.text}}</div>
-        <div>Requested by <span class="text-secondary">{{request.user}}</span></div>
-        <div>Source: <span class="text-secondary">{{sourceText}}</span></div>
-        <div>Code: <span class="codeblock w-fit inline-block">{{request.code}}</span></div>
-        <div>Duration: <span class="codeblock w-fit inline-block">{{getDuration()}}</span></div>
+        <div>Requested by <span class="text-neutral-400">{{request.user}}</span></div>
+        <div>Source: <span class="text-neutral-400">{{sourceText}}</span></div>
+        <div v-if="props.request.metadata['Group']">
+          Group: <span class="text-neutral-400">{{props.request.metadata['Group']}}</span>
+        </div>
+        <div v-if="props.request.metadata['Duration']" class="flex flex-row flex-nowrap gap-1">
+          <div>Duration: </div>
+          <duration-embed :seconds="props.request.metadata['Duration']" class=""/>
+        </div>
+        <div>Code: <span class="new-codeblock w-fit inline-block">{{request.code}}</span></div>
       </div>
       <div class="h-40 bg-red-900 aspect-video rounded-sm">
         <nuxt-img v-if="request.metadata['Thumbnail']" :src="request.metadata['Thumbnail']" class="w-full h-full" placeholder/>

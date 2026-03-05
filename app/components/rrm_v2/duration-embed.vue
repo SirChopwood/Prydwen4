@@ -50,11 +50,11 @@ let duration = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-row gap-2 flex-nowrap border rounded border-neutral-700 bg-black/40 px-1 w-fit font-jetbrains">
-    <div v-if="duration.days > 0"><span :class="{'text-secondary': longform}">{{duration.days}}</span>{{longform ? " Days" : "d"}}</div>
-    <div v-if="duration.hours > 0"><span :class="{'text-secondary': longform}">{{duration.hours}}</span>{{longform ? " Hours" : "h"}}</div>
-    <div v-if="duration.minutes > 0"><span :class="{'text-secondary': longform}">{{duration.minutes}}</span>{{longform ? " Minutes" : "m"}}</div>
-    <div><span :class="{'text-secondary': longform}">{{duration.seconds}}</span>{{longform ? " Seconds" : "s"}}</div>
+  <div class="flex flex-row gap-2 flex-nowrap new-codeblock">
+    <div v-if="duration.days > 0"><span class="text-secondary">{{duration.days}}</span>{{longform ? " Days" : "d"}}</div>
+    <div v-if="duration.hours > 0"><span class="text-secondary">{{duration.hours}}</span>{{longform ? " Hours" : "h"}}</div>
+    <div v-if="duration.minutes > 0"><span class="text-secondary">{{duration.minutes}}</span>{{longform ? " Minutes" : "m"}}</div>
+    <div><span class="text-secondary">{{duration.seconds}}</span>{{longform ? " Seconds" : "s"}}</div>
   </div>
 </template>
 

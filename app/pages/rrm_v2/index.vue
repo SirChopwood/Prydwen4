@@ -52,14 +52,21 @@ onBeforeUnmount(async () => {
       <icon name="mdi:home-outline" class="text-xl inline align-middle"/>
     </toolbar-button>
     <button disabled class="px-4 text-primary font-bold border-b border-b-neutral-500">
-      Rami Request Manager <span class="codeblock">{{version}}</span>
+      Rami Request Manager <span class="new-codeblock text-neutral-400">{{version}}</span>
     </button>
     <toolbar-button v-if="loggedIn && client.isConnected.value" @click="modalManager.showModal('Manage Sessions', SessionManagerModal, {client})">
       Sessions
     </toolbar-button>
 
     <div class="grow border-b border-b-neutral-500"/>
-
+    <button disabled class="px-4 border-b border-b-neutral-500" title="Millisecond delay on Upload/Download. (Ping)">
+      <div
+          class="inline-block new-codeblock w-32 text-neutral-400"
+          :class="{'text-red-400': client.pingUpload.value > 250 || client.pingDownload.value > 250}">
+        {{client.pingUpload}} <icon name="mdi:upload" class="translate-0.5"/>
+        {{client.pingDownload}} <icon name="mdi:download" class="translate-0.5"/>
+      </div>
+    </button>
     <toolbar-button
         v-if="user"
         @click="modalManager.showModal('Twitch User Account', TwitchAccountModal, {client, loggedIn, user, clear})"
@@ -85,7 +92,7 @@ onBeforeUnmount(async () => {
             <div class="flex flex-row flex-wrap gap-2">Uptime: <duration-embed :seconds="client.getUptime.value" longform/></div>
             <div class="flex flex-row flex-wrap gap-2">
               <div class="h-fit">Sources:</div>
-              <div v-for="source of client.getCurrentSession.value?.sources" class="codeblock">{{source}}</div>
+              <div v-for="source of client.getCurrentSession.value?.sources" class="new-codeblock">{{source}}</div>
             </div>
             <div class="flex flex-row flex-wrap gap-4">
               <div class="h-fit">Participating Channels:</div>

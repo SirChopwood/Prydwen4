@@ -18,6 +18,9 @@ export class RRM_V2_PanelClient {
     currentRequests: Ref<Array<typeof schema.RRM_V2_Requests.$inferSelect>> = ref([])
     currentSessionUptime: Ref<number> = ref(0)
     uptimeTimer: NodeJS.Timeout | undefined
+    heartbeatTimer: NodeJS.Timeout | undefined
+    pingUpload: Ref<number> = ref(-1)
+    pingDownload: Ref<number> = ref(-1)
     isConnected: Ref<boolean> = ref(false)
 
     constructor(modalManager: ModalManager) {
@@ -37,6 +40,10 @@ export class RRM_V2_PanelClient {
             this.uptimeTimer = setInterval(async () => {
                 await this.updateUptime()
             }, 500)
+
+            this.heartbeatTimer = setInterval(async () => {
+                await this.sendMessage('heartbeat', {client: new Date().getTime()})
+            }, 2000)
         })
 
         this.ws.addEventListener("message", async (event) => {
@@ -46,6 +53,12 @@ export class RRM_V2_PanelClient {
                 return
             }
 
+            if (msg.type === "heartbeat") {
+                let heartbeat = JSON.parse(msg.value)
+                this.pingUpload.value =  heartbeat.server - heartbeat.client
+                this.pingDownload.value = new Date().getTime() - heartbeat.server
+                return
+            }
             console.log(`Processing Message: ${msg.type}`)
             try {
                 switch (msg.type) {

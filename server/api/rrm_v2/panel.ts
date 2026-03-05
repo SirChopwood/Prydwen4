@@ -41,6 +41,11 @@ export default defineWebSocketHandler({
         }
         let server = peer.context.server
 
+        if (msg.type === "heartbeat") {
+            let heartbeat = new Date().getTime()
+            await server.sendMessage("heartbeat", {client: msg.value.client, server: heartbeat})
+            return
+        }
         console.log(`Processing Message: ${msg.type}`)
         try {
             switch (msg.type) {
