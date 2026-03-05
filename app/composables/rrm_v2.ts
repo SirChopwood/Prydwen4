@@ -191,6 +191,7 @@ export class RRM_V2_PanelClient {
                 queue.push(this.currentRequests.value[requestId])
             }
         }
+        console.debug(`Visible Queue Length: ${queue.length}`)
         return queue
     })
 

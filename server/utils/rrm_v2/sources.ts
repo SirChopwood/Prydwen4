@@ -37,8 +37,12 @@ export async function PyPy(request: string) {
             if (song.o[0]) {
                 try {
                     let videoData = await FetchYouTubeVideo(song.o[0]!)
-                    requestData.metadata["Thumbnail"] = videoData.snippet.thumbnails.default.url
-                    requestData.metadata["Channel"] = videoData.snippet.channelTitle
+                    if (videoData.snippet) {
+                        requestData.metadata["Thumbnail"] = videoData.snippet.thumbnails.default.url
+                        requestData.metadata["Channel"] = videoData.snippet.channelTitle
+                    } else {
+                        console.log("Unable to fetch video data for PyPy song ${song.i}")
+                    }
                 } catch (e) {
                     console.log(`Error fetching YouTube Video for PyPy song ${song.i}`)
                     console.log(e)

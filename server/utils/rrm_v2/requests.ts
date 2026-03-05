@@ -88,13 +88,14 @@ export async function fetchRequests(requestIds: Array<number>) {
     let session: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
 
     try {
-        session = await db.selectDistinct()
+        session = await db.select()
             .from(schema.RRM_V2_Requests)
             .where(inArray(schema.RRM_V2_Requests.sessionId, requestIds))
     } catch (error) {
         console.log(error)
         return
     }
+    console.debug(JSON.stringify(session))
 
     return session
 }
