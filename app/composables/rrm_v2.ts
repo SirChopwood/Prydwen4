@@ -55,8 +55,8 @@ export class RRM_V2_PanelClient {
 
             if (msg.type === "heartbeat") {
                 let heartbeat = JSON.parse(msg.value)
-                this.pingUpload.value =  heartbeat.server - heartbeat.client
-                this.pingDownload.value = new Date().getTime() - heartbeat.server
+                this.pingUpload.value = Math.abs(heartbeat.server - heartbeat.client)
+                this.pingDownload.value = Math.abs(new Date().getTime() - heartbeat.server)
                 return
             }
             console.log(`Processing Message: ${msg.type}`)
