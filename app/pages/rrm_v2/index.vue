@@ -62,7 +62,10 @@ onBeforeUnmount(async () => {
     <button disabled class="px-4 border-b border-b-neutral-500" title="Millisecond delay on Upload/Download. (Ping)">
       <div
           class="inline-block new-codeblock w-40 text-neutral-400"
-          :class="{'text-red-400': client.pingUpload.value > 250 || client.pingDownload.value > 250}">
+          :class="{
+        'text-red-400': (client.pingUpload.value > 400 || client.pingDownload.value > 400),
+        'text-amber-400': (client.pingUpload.value > 200 || client.pingDownload.value > 200),
+      }">
         {{client.pingUpload}} <icon name="mdi:upload" class="translate-0.5"/>
         {{client.pingDownload}} <icon name="mdi:download" class="translate-0.5"/>
       </div>

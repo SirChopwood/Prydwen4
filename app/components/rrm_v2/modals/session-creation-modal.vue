@@ -24,10 +24,6 @@ let tickedChannels: Ref<Array<string>> = ref([])
 let tickedSources: Ref<Array<string>> = ref([])
 let disabledControls: Ref<boolean> = ref(true)
 
-watch(tickedChannels, (newVal, oldVal) => {
-  console.log(newVal, oldVal)
-})
-
 onMounted(async () => {
   await props.client.sendMessage('getPermittedChannels', '')
   disabledControls.value = false

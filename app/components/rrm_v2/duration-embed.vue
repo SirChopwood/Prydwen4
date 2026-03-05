@@ -31,22 +31,6 @@ let duration = computed(() => {
     seconds: Math.floor(remainder)
   }
 })
-// let days = computed(() => {
-//   console.log("days", Math.floor(props.seconds / 86400))
-//   return Math.floor(props.seconds / 86400)
-// })
-// let hours = computed(() => {
-//   console.log("hours", Math.floor(props.seconds / 3600))
-//   return Math.floor(props.seconds / 3600)
-// })
-// let mins = computed(() => {
-//   console.log("mins", Math.floor((props.seconds - (hours.value * 3600)) / 60))
-//   return Math.floor((props.seconds - (hours.value * 3600)) / 60)
-// })
-// let secs = computed(() => {
-//   console.log("secs", Math.floor((props.seconds - ((hours.value * 3600) + (mins.value * 60)))))
-//   return Math.floor((props.seconds - ((hours.value * 3600) + (mins.value * 60))))
-// })
 </script>
 
 <template>

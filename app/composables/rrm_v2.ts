@@ -49,19 +49,19 @@ export class RRM_V2_PanelClient {
         this.ws.addEventListener("message", async (event) => {
             let msg: {type: string, value: any} = JSON.parse(event.data)
             if (!msg.type) {
-                console.log(`Unknown message: ${msg}`)
+                console.warn(`Unknown message: ${msg}`)
                 return
             }
 
-            if (msg.type === "heartbeat") {
-                let heartbeat = JSON.parse(msg.value)
-                this.pingUpload.value = Math.abs(heartbeat.server - heartbeat.client)
-                this.pingDownload.value = Math.abs(new Date().getTime() - heartbeat.server)
-                return
-            }
-            console.log(`Processing Message: ${msg.type}`)
+            console.debug(`Processing Message: ${msg.type}`)
             try {
                 switch (msg.type) {
+                    case "heartbeat":
+                        let heartbeat = JSON.parse(msg.value)
+                        this.pingUpload.value = Math.abs(heartbeat.server - heartbeat.client)
+                        this.pingDownload.value = Math.abs(new Date().getTime() - heartbeat.server)
+                        console.debug(`Received heartbeat. (${this.pingUpload}ms | ${this.pingDownload}ms)`)
+                        break
                     case "getPermittedChannels":
                         let data = JSON.parse(msg.value)
                         this.groups.value = data.groups
@@ -94,6 +94,7 @@ export class RRM_V2_PanelClient {
                         break
                     case "updateCurrentSession":
                         let session = JSON.parse(msg.value)
+                        console.debug(`Incoming Session: ${session}`)
                         if (msg.value !== JSON.stringify(this.activeSessions.value[session.id])) {
                             this.activeSessions.value[session.id] = session
                             console.log("Session Updated")
@@ -101,6 +102,7 @@ export class RRM_V2_PanelClient {
                         break
                     case "updateCurrentRequests":
                         let requests = JSON.parse(msg.value)
+                        console.debug(`Incoming Requests: ${requests}`)
                         if (msg.value !== JSON.stringify(this.currentRequests.value)) {
                             this.currentRequests.value = requests
                             console.log("Requests Updated")
@@ -108,14 +110,15 @@ export class RRM_V2_PanelClient {
                         break
                     case "sendNotification":
                         let notification = JSON.parse(msg.value)
+                        console.debug(`Incoming Notification: ${notification}`)
                         await this.modalManager.showNotification(notification.title, notification.colour, notification.message)
                         break
                     default:
-                        console.log(`Unknown type: ${msg.type}`)
+                        console.warn(`Unknown type: ${msg.type}`)
                         break
                 }
             } catch (e) {
-                console.log(e)
+                console.error(e)
             }
             return
         })
@@ -123,7 +126,7 @@ export class RRM_V2_PanelClient {
             console.log("Disconnected from Server")
         })
         this.ws.addEventListener("error", async (event) => {
-            console.log(`Connection Error: ${event}`)
+            console.error(`Connection Error: ${event}`)
         })
     }
 

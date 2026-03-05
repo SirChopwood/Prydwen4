@@ -32,10 +32,6 @@ const props = defineProps({
   }
 })
 
-onMounted(() => {
-  console.log(props.user.description)
-})
-
 async function logout() {
   props.clear()
   await props.modalManager.hideModal(props.name)

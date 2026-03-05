@@ -25,7 +25,6 @@ onMounted(async () => {
 })
 
 watch(props, async (newValue, oldValue) => {
-  console.log(newValue)
   await updateColour()
 })
 

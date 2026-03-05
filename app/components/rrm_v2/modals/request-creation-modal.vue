@@ -43,11 +43,6 @@ let sessionValid = computed(() => {
 
 async function createRequest() {
   if (!sessionValid.value) {return}
-
-  console.log({
-    user: props.client.user!.login,
-    codes: codeArray.value,
-  })
   await props.client.sendMessage('createRequest', {
     user: props.client.user!.login,
     codes: codeArray.value,

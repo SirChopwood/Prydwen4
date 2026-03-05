@@ -27,7 +27,7 @@ class Modal_Manager {
 
     async showModal(name: string, component: Component, context: any = {}) {
         if (!this.contents || !this.background){return}
-        console.log(`Opening Modal: ${name}`)
+        console.debug(`Opening Modal: ${name}`)
         context.name = name
         context.modalManager = this
         this.modalNodeList[name] = this.contents.appendChild(document.createElement("div"))
@@ -42,7 +42,7 @@ class Modal_Manager {
 
     async hideModal(name: string) {
         if (!this.contents || !this.background){return}
-        console.log(`Closing Modal: ${name}`)
+        console.debug(`Closing Modal: ${name}`)
         this.modalAppList[name].unmount()
         delete this.modalAppList[name]
         delete this.modalNodeList[name]
@@ -56,7 +56,7 @@ class Modal_Manager {
     async showNotification(title: string, colour: string, message: string) {
         if (!this.notificationContainer){return}
         let uid = crypto.randomUUID()
-        console.log(`Adding Notification: ${uid}`)
+        console.debug(`Adding Notification: ${uid}`)
         let context = {
             uid: uid,
             title: title,
@@ -72,7 +72,7 @@ class Modal_Manager {
 
     async hideNotification(uid: string) {
         if (!this.notificationContainer){return}
-        console.log(`Removing Notification: ${uid}`)
+        console.debug(`Removing Notification: ${uid}`)
         this.notificationAppList[uid].unmount()
         delete this.notificationAppList[uid]
         delete this.notificationNodeList[uid]
