@@ -12,7 +12,6 @@ import {onBeforeUnmount} from "#imports";
 import DurationEmbed from "~/components/rrm_v2/duration-embed.vue";
 import RequestCreationModal from "~/components/rrm_v2/modals/request-creation-modal.vue";
 
-
 definePageMeta({
   title: "Rami Request Manager V2",
   layout: "panel"
@@ -28,19 +27,16 @@ useSeoMeta({
   author: "Ramiris"
 })
 
+let version = ref("2.1.0")
 const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession()
 let modalManager = useModalManager()
 let client = usePanelClient(modalManager)
 
-watch(client.getUptime, (value, oldValue) => {
-  console.log("CURRENT UPTIME", value, oldValue)
-})
-
 onMounted(async () => {
   await modalManager.onMounted()
-  await client.connectToServer()
   if (loggedIn && user.value) {
-    client.userId = user.value.id
+    client.user = user.value
+    await client.connectToServer()
   }
 })
 
@@ -52,12 +48,13 @@ onBeforeUnmount(async () => {
 <template>
   <div class="fixed top-0 z-30 bg-neutral-800 stripes w-full h-10 flex flex-row divide-x divide-neutral-700">
     <toolbar-button @click="navigateTo('/')" title="Return to Home">
+      <!--  WHERE DID THIS EVEN GO???  -->
       <icon name="mdi:home-outline" class="text-xl inline align-middle"/>
     </toolbar-button>
     <button disabled class="px-4 text-primary font-bold border-b border-b-neutral-500">
-      Rami Request Manager <span class="codeblock">2.0.0</span>
+      Rami Request Manager <span class="codeblock">{{version}}</span>
     </button>
-    <toolbar-button v-if="loggedIn && client.isConnected" @click="modalManager.showModal('Manage Sessions', SessionManagerModal, {client})">
+    <toolbar-button v-if="loggedIn && client.isConnected.value" @click="modalManager.showModal('Manage Sessions', SessionManagerModal, {client})">
       Sessions
     </toolbar-button>
 
@@ -72,17 +69,21 @@ onBeforeUnmount(async () => {
     </toolbar-button>
   </div>
   <div class="mt-10 flex flex-col w-full h-full">
-    <div v-if="loggedIn && client.isConnected" class="w-full h-full flex flex-row p-4 gap-4">
+    <div v-if="loggedIn && client.isConnected.value" class="w-full h-full flex flex-row p-4 gap-4">
       <div class="basis-3/5 h-full">
         <request-queue-widget :client="client"  :modal-manager="modalManager"/>
       </div>
       <div class="basis-2/5 flex flex-col gap-4">
+        <!--  TWITCH STREAM EMBED WIDGET - Just for you ben :3  -->
         <control-category-widget header="Stream Preview">
-          <twitch-player-widget/>
+          <twitch-player-widget v-show="client.isCurrentSessionValid"/>
+          <div v-show="!client.isCurrentSessionValid" class="size-10 block"/>
         </control-category-widget>
+        <!--  SESSION INFO WIDGET  -->
         <control-category-widget header="Session Info">
-          <div class="w-full flex flex-col gap-4" v-if="client.getCurrentSession.value">
-            <div class="flex flex-row flex-wrap gap-2">Uptime {{client.getUptime.value}} <duration-embed :seconds="client.getUptime.value"/></div>
+          <div class="w-full flex flex-col gap-4" v-if="client.isCurrentSessionValid.value">
+            <div class="flex flex-row flex-wrap gap-2">Uptime {{client.getUptime.value}} <duration-embed :seconds="client.getUptime.value" longform/></div>
+            <duration-embed :seconds="12345679" longform/>
             <div class="flex flex-row flex-wrap gap-2">
               <div class="h-fit">Sources:</div>
               <div v-for="source of client.getCurrentSession.value?.sources" class="codeblock">{{source}}</div>
@@ -92,26 +93,51 @@ onBeforeUnmount(async () => {
               <twitch-channel-widget v-for="channel of client.getCurrentSession.value?.channels" :client="client" :channel-id="channel"/>
             </div>
             <div class="flex flex-row flex-wrap gap-4">
-              <generic-button colour="yellow" @click="modalManager.showModal('Add a Request', RequestCreationModal, {client})"><icon name="mdi:plus" class="text-lg -ml-1"/>Add Request</generic-button>
-              <generic-button colour="blue" @click="client.sendMessage('updatePosition', {index: client.getCurrentSession.value.position + 1})"><icon name="mdi:chevron-triple-right" class="text-lg -ml-1"/>Next Request</generic-button>
+
+              <generic-button colour="yellow" @click="modalManager.showModal('Add a Request', RequestCreationModal, {client})">
+                <icon name="mdi:plus" class="text-lg -ml-1"/>Add Request
+              </generic-button>
+
+              <generic-button colour="blue" @click="client.sendMessage('updatePosition', {index: client.getCurrentSession.value!.position + 1})">
+                <icon name="mdi:chevron-triple-right" class="text-lg -ml-1"/>Next Request
+              </generic-button>
+
               <div class="grow"/>
+
               <generic-button colour="red" @click="client.sendMessage('updateSessionState', {
               sessionId: client.currentSessionId.value,
               open: 'Closed'
-              })"><icon name="mdi:alert-octagon-outline" class="text-lg -ml-1"/>End Session</generic-button>
+              })">
+                <icon name="mdi:alert-octagon-outline" class="text-lg -ml-1"/>End Session
+              </generic-button>
+
             </div>
+          </div>
+          <!--  PLACEHOLDER WHEN NO SESSION  -->
+          <div v-else class="text-2xl text-neutral-400 italic w-full text-center">
+              No Session selected.
           </div>
         </control-category-widget>
       </div>
     </div>
-    <div v-if="!loggedIn" class="flex flex-col gap-2 bg-neutral-800 m-4 border-2 border-red-900 rounded h-96 justify-center items-center content-center">
+    <!--  PRE-LOGIN AND LOADING SCREEN  -->
+    <div v-else class="flex flex-col gap-2 bg-neutral-800 m-4 p-4 border-2 border-neutral-700 rounded h-fit w-fit justify-self-center place-self-center justify-center items-center content-center text-center text-2xl text-neutral-400">
       <div class="text-2xl text-primary">Rami Request Manager</div>
-      <div>Version: <span class="codeblock">2.0.0</span></div>
-      To begin, please sign in to Twitch using the button below.
-      <generic-button colour="purple" @click="navigateTo('/api/rrm_v2/auth', {external: true})">
-        <icon name="mdi:twitch"/>
-        Log In via Twitch
-      </generic-button>
+      <div>Version: <span class="codeblock">{{version}}</span></div>
+      <!--  PLACEHOLDER WHILE LOADING  -->
+      <div v-if="loggedIn" class="flex flex-col gap-2">
+        <div class="text-secondary">Loading...</div>
+        <div class="italic">Please wait</div>
+      </div>
+      <!--  FORCE USER TO LOGIN TO TWITCH  -->
+      <div v-else class="flex flex-col gap-2">
+        <div class="text-secondary">Welcome!</div>
+        <div class="italic">To begin, please sign in...</div>
+        <generic-button colour="purple" @click="navigateTo('/api/rrm_v2/auth', {external: true})">
+          <icon name="mdi:twitch"/>
+          Log In via Twitch
+        </generic-button>
+      </div>
     </div>
   </div>
 </template>

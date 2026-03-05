@@ -31,7 +31,7 @@ async function saveAndClose() {
 }
 
 onMounted(async () => {
-  props.client.sendMessage('getActiveSessions', {channelId: props.client.userId})
+  props.client.sendMessage('getActiveSessions', {channelId: props.client.user!.id})
 })
 </script>
 
@@ -46,10 +46,11 @@ onMounted(async () => {
         or
         <select v-model="selectionId" class="min-w-40 codeblock text-white py-1">
           <option v-if="Object.keys(client.activeSessions.value).length === 0" disabled selected label="None Available" :value="-1"/>
-          <option v-else disabled selected label="Select an Option..." :value="-1"/>
+          <option v-else disabled label="Select an Option..." :value="-1"/>
+          <option selected label="None" :value="-1"/>
           <option v-for="session of client.activeSessions.value" :label="`Session ${session.id}`" :value="session.id"/>
         </select>
-        <generic-button colour="blue" title="Refresh Current Sessions" @click="props.client.sendMessage('getActiveSessions', {channelId: client.userId})">
+        <generic-button colour="blue" title="Refresh Current Sessions" @click="props.client.sendMessage('getActiveSessions', {channelId: client.user!.id})">
           <icon name="mdi:sync" class="text-xl inline align-middle -mx-4 translate-x-1.5"/>
         </generic-button>
       </div>

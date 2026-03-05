@@ -1,4 +1,5 @@
 import type {schema} from "#build/types/nitro-imports";
+import type {User} from "#auth-utils";
 
 export function usePanelClient(modalManager: ModalManager) {
     return new RRM_V2_PanelClient(modalManager)
@@ -7,7 +8,7 @@ export function usePanelClient(modalManager: ModalManager) {
 export class RRM_V2_PanelClient {
     modalManager: ModalManager
     ws: WebSocket | null = null
-    userId: string = ""
+    user: User | null = null
     groups: Ref<Array<typeof schema.RRM_V2_Groups.$inferSelect>> = ref([]) // Groups containing Channel IDs
     moderated: Ref<Array<string>> = ref([]) // Channel IDs
     channels: Ref<Record<string, RRM_V2_TwitchChannel>> = ref({}) // converts IDs to channel info
@@ -17,22 +18,21 @@ export class RRM_V2_PanelClient {
     currentRequests: Ref<Array<typeof schema.RRM_V2_Requests.$inferSelect>> = ref([])
     currentSessionUptime: Ref<number> = ref(0)
     uptimeTimer: NodeJS.Timeout | undefined
+    isConnected: Ref<boolean> = ref(false)
 
     constructor(modalManager: ModalManager) {
         this.modalManager = modalManager
         console.log("RRM V2 Panel Client")
     }
 
-    isConnected = computed(() => {
-        return this.ws?.readyState == WebSocket.OPEN
-    })
-
     async connectToServer() {
         if (this.ws) {return}
         this.ws = new WebSocket("/api/rrm_v2/panel")
         this.ws.addEventListener("open", async (event) => {
             console.log("Connected to Server")
-            await this.sendMessage('getActiveSessions', {channelId: this.userId})
+            this.isConnected.value = true
+
+            await this.sendMessage('getActiveSessions', {channelId: this.user!.id})
 
             this.uptimeTimer = setInterval(async () => {
                 await this.updateUptime()
@@ -161,6 +161,11 @@ export class RRM_V2_PanelClient {
 
     getCurrentSession = computed(() => {
         return this.activeSessions.value[String(this.currentSessionId.value)]
+    })
+
+    isCurrentSessionValid = computed(() => {
+        console.log(this.getCurrentSession.value !== undefined)
+        return this.getCurrentSession.value !== undefined
     })
 
     getCurrentRequestQueue = computed(() => {

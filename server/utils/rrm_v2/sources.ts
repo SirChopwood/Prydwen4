@@ -61,17 +61,21 @@ export async function PlainText(request: string) {
 export async function YouTube(request: string) {
     try {
         let videoData = await FetchYouTubeVideo(request)
-        return {
-            text: videoData.snippet.title,
-            code: `https://www.youtube.com/watch?v=${videoData.id}`,
-            metadata: {
-                "Source": "YouTube",
-                "Thumbnail": videoData.snippet.thumbnails.default.url,
-                "Channel": videoData.snippet.channelTitle
-            },
+        if (!videoData) {
+            return {
+                text: videoData.snippet.title,
+                code: `https://www.youtube.com/watch?v=${videoData.id}`,
+                metadata: {
+                    "Source": "YouTube",
+                    "Thumbnail": videoData.snippet.thumbnails.default.url,
+                    "Channel": videoData.snippet.channelTitle
+                },
+            }
+        } else {
+            return undefined
         }
     } catch (e) {
-        console.log(`Error fetching YouTube Video for request ${request}}`)
+        console.log(`Error fetching YouTube Video for request ${request}`)
         console.log(e)
     }
 }
@@ -82,6 +86,7 @@ async function FetchYouTubeVideo(url: string) {
     let ytRequest = ytRegex.exec(url)
     if (!ytRequest) {return undefined}
     if (!ytRequest[1]) {return undefined}
+    console.log(ytRequest[1])
 
     // Login to YT API
     if (!process.env.GOOGLE_AUTH) {return undefined}

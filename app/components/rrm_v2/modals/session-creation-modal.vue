@@ -41,12 +41,12 @@ async function createSession() {
   if (!sessionValid.value) {return}
 
   let channelList = tickedChannels.value
-  if (!channelList.includes(props.client.userId)) {
-    channelList.push(props.client.userId)
+  if (!channelList.includes(props.client.user!.id)) {
+    channelList.push(props.client.user!.id)
   }
 
   await props.client.sendMessage('createSession', {
-    hostId: props.client.userId,
+    hostId: props.client.user!.id,
     channels: channelList,
     sources: tickedSources.value,
   })
@@ -68,7 +68,11 @@ async function createSession() {
       </div>
       <div class="h-fit">Participating Channels <span class="text-secondary">({{tickedChannels.length}})</span></div>
       <div class="flex flex-col gap-2 border border-neutral-700 p-2 rounded bg-neutral-950 h-52 overflow-y-scroll">
-        <div class="flex flex-col gap-2">
+        <div v-if="client.moderated.value.length === 0">
+            <icon name="mdi:loading" class="animate-spin text-2xl text-center"/>
+          Loading
+        </div>
+        <div v-else class="flex flex-col gap-2">
           <div class="text-secondary border-b border-b-secondary w-full">
             <span>Moderator</span>
             <span class="italic text-neutral-400"> - Channels you are a Moderator for on Twitch.</span>

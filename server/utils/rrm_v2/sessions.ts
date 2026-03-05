@@ -229,12 +229,11 @@ export async function removeRequest(sessionId: number, index: number) {
 
     try {
         let array = session.requests
-        array.splice(index, 0)
+        array.splice(index, 1)
 
         await db.update(schema.RRM_V2_Sessions)
             .set({requests: array})
             .where(eq(schema.RRM_V2_Sessions.id, sessionId))
-            .returning()
         return true
     } catch (error) {
         console.log(error)

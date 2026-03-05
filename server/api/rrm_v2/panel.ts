@@ -215,21 +215,25 @@ class RRM_V2_PanelServer {
     }
 
     async createRequest(user: string, codes: Array<string>) {
-        let res = await $fetch("/api/rrm_v2/request", {
-            method: "POST",
-            body: JSON.stringify({
+        try {
+            console.log(JSON.stringify({
                 "sessionId": this.sessionId,
                 "user": user,
                 "codes": codes
+            }))
+            let res = await $fetch("/api/rrm_v2/request", {
+                method: "POST",
+                body: JSON.stringify({
+                    "sessionId": this.sessionId,
+                    "user": user,
+                    "codes": codes
+                })
             })
-        })
-        // {
-        //     sessionId: z.number(),
-        //         user: z.string(),
-        //     codes: z.array(z.string()).min(1)
-        // }
-        if (res && res.length > 0) {
-            await this.sendNotification("Request(s) Added", "green", `Added ${res.length} requests to the queue.`)
+            if (res && res.length > 0) {
+                await this.sendNotification("Request(s) Added", "green", `Added ${res.length} requests to the queue.`)
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 }

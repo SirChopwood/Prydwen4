@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
                     let success = await createRequest(context.body.sessionId, context.body.user, result)
                     if (success) {
                         results.push(success)
+                        break
                     }
                 } else {
                     console.log(`Failed to process ${request} as ${sourceName}.`)

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 useHead({
-  script: [{src: "https://player.twitch.tv/js/embed/v1.js"}]
+  script: [{src: "https://player.twitch.tv/js/embed/v1.js", onload: async (e) => {await setupPlayer()}}]
 })
 
 let twitchPlayer: any;
 let twitchPlayerBoxRef = useTemplateRef("twitchPlayerBox")
 
-onMounted(() => {
+async function setupPlayer() {
   let TwitchOptions = {
     width: twitchPlayerBoxRef.value!.clientWidth,
     height: twitchPlayerBoxRef.value!.clientHeight,
@@ -17,6 +17,9 @@ onMounted(() => {
   };
   // @ts-ignore
   twitchPlayer = new Twitch.Player("twitchPlayerBox", TwitchOptions)
+}
+
+onMounted(() => {
 })
 </script>
 
