@@ -221,17 +221,13 @@ class RRM_V2_PanelServer {
 
     async createRequest(user: string, codes: Array<string>) {
         try {
-            console.log(JSON.stringify({
-                "sessionId": this.sessionId,
-                "user": user,
-                "codes": codes
-            }))
             let res = await $fetch("/api/rrm_v2/request", {
                 method: "POST",
                 body: JSON.stringify({
                     "sessionId": this.sessionId,
                     "user": user,
-                    "codes": codes
+                    "codes": codes,
+                    "force": true
                 })
             })
             if (res && res.length > 0) {

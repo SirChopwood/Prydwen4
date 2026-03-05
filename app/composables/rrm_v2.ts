@@ -121,9 +121,6 @@ export class RRM_V2_PanelClient {
         })
         this.ws.addEventListener("close", async (event) => {
             console.log("Disconnected from Server")
-            // if (this.updateTimer) {
-            //     clearInterval(this.updateTimer)
-            // }
         })
         this.ws.addEventListener("error", async (event) => {
             console.log(`Connection Error: ${event}`)
@@ -140,9 +137,6 @@ export class RRM_V2_PanelClient {
 
     async disconnectFromServer() {
         this.ws!.close()
-        // if (this.updateTimer) {
-        //     clearInterval(this.updateTimer)
-        // }
     }
 
     async sendMessage(type: string, value: any) {
@@ -178,7 +172,6 @@ export class RRM_V2_PanelClient {
     })
 
     isCurrentSessionValid = computed(() => {
-        console.log(this.getCurrentSession.value !== undefined)
         return this.getCurrentSession.value !== undefined
     })
 

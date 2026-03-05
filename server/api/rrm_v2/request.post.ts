@@ -4,12 +4,16 @@ export default defineEventHandler(async (event) => {
     const context = await validateRequest(event, z.strictObject({
         sessionId: z.number(),
         user: z.string(),
-        codes: z.array(z.string()).min(1)
+        codes: z.array(z.string()).min(1),
+        force: z.boolean().default(false).optional(),
     }), false)
 
-    let results = []
+    let results: Array<number> = []
     let session = await fetchSession(context.body.sessionId)
     if (session) {
+        if (!context.body.force && session.requestState === "Locked") {
+            return results
+        }
         for (let request of context.body.codes) {
             for (let sourceName of session.sources) {
                 let result
@@ -30,7 +34,6 @@ export default defineEventHandler(async (event) => {
                     console.log(`Failed to process ${request} as ${sourceName}.`)
                 }
             }
-            console.log(`Request ${request} could not be validated in any sources.`)
         }
         return results
     }

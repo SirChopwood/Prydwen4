@@ -22,18 +22,6 @@ const props = defineProps({
     required: true,
   }
 })
-
-function getDuration() {
-  let duration = props.request.metadata["Duration"]
-  if (!duration) {return "N/A"}
-
-  if (duration > 60) {
-    let mins = Math.floor(duration/60)
-    return `${mins}m ${duration - (mins * 60)}s`
-  } else {
-    return `${duration}s`
-  }
-}
 </script>
 
 <template>
