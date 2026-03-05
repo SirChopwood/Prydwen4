@@ -15,7 +15,7 @@ export class RRM_V2_PanelClient {
     activeSessions: Ref<Record<string, typeof schema.RRM_V2_Sessions.$inferSelect>> = ref({})
     channelFetches: Array<string> = []
     currentSessionId: Ref<number> = ref(-1)
-    currentRequests: Ref<Array<typeof schema.RRM_V2_Requests.$inferSelect>> = ref([])
+    currentRequests: Ref<Record<string, typeof schema.RRM_V2_Requests.$inferSelect>> = ref({})
     currentSessionUptime: Ref<number> = ref(0)
     uptimeTimer: NodeJS.Timeout | undefined
     heartbeatTimer: NodeJS.Timeout | undefined
@@ -101,12 +101,14 @@ export class RRM_V2_PanelClient {
                         }
                         break
                     case "updateCurrentRequests":
-                        let requests = JSON.parse(msg.value)
+                        let requests: Array<typeof schema.RRM_V2_Requests.$inferSelect> = JSON.parse(msg.value)
                         console.debug(`Incoming Requests: ${msg.value}`)
-                        if (msg.value !== JSON.stringify(this.currentRequests.value)) {
-                            this.currentRequests.value = requests
-                            console.log("Requests Updated")
+                        let reqCount = 0
+                        for (let req of requests) {
+                            this.currentRequests.value[String(req.id)] = req
+                            reqCount++
                         }
+                        console.log(`${reqCount} Requests Updated`)
                         break
                     case "sendNotification":
                         let notification = JSON.parse(msg.value)
@@ -183,12 +185,10 @@ export class RRM_V2_PanelClient {
         if (!currentSession) {return []}
 
         let queue = []
+        let keys = Object.keys(this.currentRequests.value)
         for (let requestId of currentSession.requests) {
-            let request = this.currentRequests.value.find((request) => {
-                return requestId === request.id
-            })
-            if (request) {
-                queue.push(request)
+            if (keys.includes(String(requestId))) {
+                queue.push(this.currentRequests.value[requestId])
             }
         }
         return queue
