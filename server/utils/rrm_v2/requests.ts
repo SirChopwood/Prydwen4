@@ -44,14 +44,18 @@ export async function createRequest(
     let session = await fetchSession(sessionId)
     if (!session) {return}
 
+    for (let key of Object.keys(request.metadata)) {
+        request.metadata[key] = request.metadata[key]!.replaceAll("'","")
+    }
+
     try {
         let newRequest = await db.insert(schema.RRM_V2_Requests).values({
             sessionId: sessionId,
             timestamp: new Date().getTime(),
-            text: request.text,
-            code: request.code,
+            text: request.text.replaceAll("'",""),
+            code: request.code.replaceAll("'",""),
             metadata: request.metadata,
-            user: user,
+            user: user.replaceAll("'",""),
         }).returning()
 
         if (newRequest.length > 0) {
