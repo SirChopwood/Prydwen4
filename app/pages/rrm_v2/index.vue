@@ -36,7 +36,7 @@ onMounted(async () => {
   await modalManager.onMounted()
   if (loggedIn && user.value) {
     client.user = user.value
-    await client.connectToServer()
+    await client.connectToServer(user.value.id)
   }
 })
 

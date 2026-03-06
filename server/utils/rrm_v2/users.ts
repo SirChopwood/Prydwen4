@@ -15,11 +15,8 @@ export type RRM_V2_TwitchChannel = {
  * @param {string} channelName - Twitch Channel Login/Display Name
  * @returns {RRM_V2_TwitchChannel | undefined} - Channel Info or Undefined if unable to find.
  */
-export async function fetchChannelInfo(
-    channelId?: string,
-    channelName?: string
-) {
-    if (!channelId && !channelName) {
+export async function fetchChannelInfo(channel: string) {
+    if (!channel) {
         console.log("No id or name provided.")
         return
     }
@@ -49,13 +46,13 @@ export async function fetchChannelInfo(
         query: {}
     }
 
-    if (channelId) {
-        // @ts-ignore
-        userRequestUrl.query.id = String(channelId)
-    } else if (channelName) {
-        // @ts-ignore
-        userRequestUrl.query.login = channelName.toLowerCase()
-    }
+        if (Number.isInteger(channel)) {
+            // @ts-ignore
+            userRequestUrl.query.id = String(Number(channel))
+        } else {
+            // @ts-ignore
+            userRequestUrl.query.login = channel.toLowerCase()
+        }
 
     const userRequest = await fetch(url.format(userRequestUrl), {
         headers: {
