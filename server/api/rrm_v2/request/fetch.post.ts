@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
         token: z.string()
     }), false)
     if (context.body.token !== process.env.MODCORP_TOKEN) {
-        createError("Token is invalid.")
+        throw createError("Token is invalid.")
     }
 
     let requests = await fetchRequests(context.body.requestIds)
