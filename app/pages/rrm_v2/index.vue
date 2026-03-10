@@ -27,7 +27,7 @@ useSeoMeta({
   author: "Ramiris"
 })
 
-let version = ref("2.1.0")
+let version = ref("2.1.1")
 const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession()
 let modalManager = useModalManager()
 let client = usePanelClient(modalManager)

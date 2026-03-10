@@ -221,7 +221,7 @@ export class RRM_V2_PanelServer extends RRM_V2_BaseServer{
 
     async createRequest(user: string, codes: Array<string>) {
         try {
-            let res: Array<typeof schema.RRM_V2_Requests.$inferSelect> = await $fetch("/api/rrm_v2/request", {
+            let res: Array<typeof schema.RRM_V2_Requests.$inferSelect> = await $fetch("/api/rrm_v2/request/add", {
                 method: "POST",
                 body: JSON.stringify({
                     "sessionId": this.sessionId,
