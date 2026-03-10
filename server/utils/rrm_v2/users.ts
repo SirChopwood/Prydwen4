@@ -46,13 +46,13 @@ export async function fetchChannelInfo(channel: string) {
         query: {}
     }
 
-        if (Number.isInteger(channel)) {
-            // @ts-ignore
-            userRequestUrl.query.id = String(Number(channel))
-        } else {
-            // @ts-ignore
-            userRequestUrl.query.login = channel.toLowerCase()
-        }
+    if (!isNaN(Number(channel))) {
+        // @ts-ignore
+        userRequestUrl.query.id = String(Number(channel))
+    } else {
+        // @ts-ignore
+        userRequestUrl.query.login = channel.toLowerCase()
+    }
 
     const userRequest = await fetch(url.format(userRequestUrl), {
         headers: {

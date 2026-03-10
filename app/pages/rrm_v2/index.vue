@@ -37,6 +37,7 @@ onMounted(async () => {
   if (loggedIn && user.value) {
     client.user = user.value
     await client.connectToServer(user.value.id)
+    await client.sendMessage('getPermittedChannels', '')
   }
 })
 
