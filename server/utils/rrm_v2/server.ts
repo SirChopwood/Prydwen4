@@ -228,7 +228,8 @@ export class RRM_V2_PanelServer extends RRM_V2_BaseServer{
                     "sessionId": this.sessionId,
                     "user": user,
                     "codes": codes,
-                    "force": true
+                    "force": true,
+                    "token": process.env.MODCORP_TOKEN
                 })
             })
             if (res && res.length > 0) {
