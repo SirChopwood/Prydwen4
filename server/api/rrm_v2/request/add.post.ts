@@ -6,7 +6,11 @@ export default defineEventHandler(async (event) => {
         user: z.string(),
         codes: z.array(z.string()).min(1),
         force: z.boolean().default(false).optional(),
+        token: z.string()
     }), false)
+    if (context.body.token !== process.env.MODCORP_TOKEN) {
+        createError("Token is invalid.")
+    }
 
     let results: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
     let session = await fetchSession(context.body.sessionId)
