@@ -65,7 +65,7 @@ export async function createRequest(
                     .set({requests: session.requests})
                     .where(eq(schema.RRM_V2_Sessions.id, sessionId))
                     .returning()
-                return newRequest[0]!.id
+                return newRequest[0]
             } catch (error) {
                 console.log(error)
             }
@@ -85,17 +85,15 @@ export async function createRequest(
 export async function fetchRequests(requestIds: Array<number>) {
     if (requestIds.length < 0) {return}
 
-    let session: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
+    let requests: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
 
     try {
-        session = await db.select()
+        requests = await db.select()
             .from(schema.RRM_V2_Requests)
             .where(inArray(schema.RRM_V2_Requests.sessionId, requestIds))
     } catch (error) {
         console.log(error)
-        return
     }
-    console.debug(JSON.stringify(session))
 
-    return session
+    return requests
 }

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
         force: z.boolean().default(false).optional(),
     }), false)
 
-    let results: Array<number> = []
+    let results: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
     let session = await fetchSession(context.body.sessionId)
     if (session) {
         if (!context.body.force && session.requestState === "Locked") {

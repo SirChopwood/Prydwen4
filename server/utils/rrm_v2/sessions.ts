@@ -88,6 +88,25 @@ export async function fetchSession(sessionId?: number, channelId?: string) {
     return session
 }
 
+/**
+ * Fetch all sessions that are currently open.
+ * @returns {Array<typeof schema.RRM_V2_Sessions.$inferSelect>} - Currently Open Sessions
+ */
+export async function fetchActiveSessions() {
+    let sessions: Array<typeof schema.RRM_V2_Sessions.$inferSelect> = []
+
+    try {
+        sessions = await db.query.RRM_V2_Sessions.findMany({
+            where: (sessions, {eq}) => {
+                return eq(sessions.sessionState, "Open")
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+    return sessions
+}
+
 
 /**
  * Fetch a session by its ID or a Twitch Channel ID.
