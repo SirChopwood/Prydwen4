@@ -102,12 +102,12 @@ function getSourceText() {
 
 <template>
   <div class="group flex flex-col transition-all duration-200">
-    <div class="relative bg-neutral-900 group-hover:bg-neutral-800 px-1 py-0.5 w-full flex flex-row rounded border overflow-clip drop-shadow-2xl" :class="{
+    <div class="relative bg-neutral-900 group-hover:bg-neutral-800 w-full flex flex-row rounded border overflow-clip drop-shadow-2xl" :class="{
       'border-primary': selected,
       'border-neutral-700': !selected,
       'group-hover:border-neutral-600': !selected
     }">
-      <div class="grow flex flex-col p-1">
+      <div class="grow flex flex-col p-1 px-1 py-0.5 ">
         <div class="text-primary underline-offset-4" :class="{
         'text-2xl': selected,
         'text-lg': !selected

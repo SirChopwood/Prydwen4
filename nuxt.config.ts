@@ -91,6 +91,8 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    '.**': { prerender: false }
+    '.**': { prerender: false },
+    "/rrm_v2": {prerender: false, ssr: false},
+    "/rrm": {redirect: "/rrm_v2"}
   }
 })

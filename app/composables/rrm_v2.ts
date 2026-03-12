@@ -38,6 +38,7 @@ export class RRM_V2_BaseClient {
             console.log("Connected to Server")
             this.isConnected.value = true
 
+            await this.sendMessage('getPermittedChannels', '')
             await this.sendMessage('getActiveSessions', {channel: this.channel})
 
             this.uptimeTimer = setInterval(async () => {
