@@ -29,6 +29,9 @@ export default defineEventHandler(async (event) => {
                 }
                 if (result) {
                     console.log(`Processed ${request} as ${sourceName}.`)
+
+                    // ADD IN LOGIC FOR DUPLICATE SONGS (Ignore if Force enabled)
+
                     let success = await createRequest(context.body.sessionId, context.body.user, result)
                     if (success) {
                         results.push(success)

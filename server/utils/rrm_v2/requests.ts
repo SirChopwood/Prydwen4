@@ -1,32 +1,10 @@
 import {fetchSession} from "~~/server/utils/rrm_v2/sessions";
-import {and, eq, ne, sql} from "drizzle-orm";
-import {inArray} from "drizzle-orm/sql/expressions/conditions";
+import {and, eq, ne, sql, inArray} from "drizzle-orm";
 
 type RRM_V2_RequestData = {
     text: string,
     code: string,
     metadata: Record<string, string>
-}
-
-// MOVE TO REQUEST HANDLER ITSELF
-export async function attemptRequest(
-    sessionId: number,
-    user: string,
-    request: RRM_V2_RequestData
-) {
-    try {
-        let existingRequests = await db.query.RRM_V2_Requests.findMany({
-            where: (requests, {eq, and}) => {
-                return and(eq(requests.sessionId, sessionId), eq(requests.code, request.code))
-            }
-        })
-        if (existingRequests.length > 0) {
-            return
-        }
-    } catch (error) {
-        console.log(error)
-        return
-    }
 }
 
 /**
@@ -83,17 +61,29 @@ export async function createRequest(
  * @returns {Array<typeof schema.RRM_V2_Requests.$inferSelect>} - Session Info
  */
 export async function fetchRequests(requestIds: Array<number>) {
-    if (requestIds.length < 0) {return}
+    if (requestIds.length < 1) {return}
 
     let requests: Array<typeof schema.RRM_V2_Requests.$inferSelect> = []
 
-    try {
-        requests = await db.select()
-            .from(schema.RRM_V2_Requests)
-            .where(inArray(schema.RRM_V2_Requests.sessionId, requestIds))
-    } catch (error) {
-        console.log(error)
+    for (let id of requestIds) {
+        try {
+            let query = await db.select().from(schema.RRM_V2_Requests).where(eq(schema.RRM_V2_Requests.id, id))
+            if (query[0]) {
+                requests.push(query[0])
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
-
+    // IDK WHY THIS ISNT WORKING BUT IT DOES IF YOU DO IT ONE BY ONE
+    // try {
+    //     console.log(JSON.stringify(requestIds))
+    //     requests = await db.select()
+    //         .from(schema.RRM_V2_Requests)
+    //         .where(inArray(schema.RRM_V2_Requests.sessionId, requestIds))
+    //     console.log(JSON.stringify(requests))
+    // } catch (error) {
+    //     console.log(error)
+    // }
     return requests
 }

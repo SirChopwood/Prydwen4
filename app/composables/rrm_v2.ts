@@ -86,7 +86,7 @@ export class RRM_V2_BaseClient {
                         if (this.currentSessionId.value === -1) {
                             let savedSessionId = localStorage.getItem("RRM_V2_CurrentSessionId")
                             if (Number(savedSessionId)) {
-                                console.log(`Loading saved Session ID: ${savedSessionId}`)
+                                console.info(`Loading saved Session ID: ${savedSessionId}`)
                                 await this.setCurrentSession(Number(savedSessionId))
                             }
                         }
@@ -97,7 +97,7 @@ export class RRM_V2_BaseClient {
                     console.debug(`Incoming Session: ${value}`)
                     if (value !== JSON.stringify(this.activeSessions.value[session.id])) {
                         this.activeSessions.value[session.id] = session
-                        console.log("Session Updated")
+                        console.log(`Session Updated: ID ${session.id}`)
                     }
                     return true
                 case "updateCurrentRequests":
@@ -108,7 +108,7 @@ export class RRM_V2_BaseClient {
                         this.currentRequests.value[String(req.id)] = req
                         reqCount++
                     }
-                    console.log(`${reqCount} Requests Updated`)
+                    console.log(`Requests Updated: ${reqCount}`)
                     return true
                 default:
                     return false
