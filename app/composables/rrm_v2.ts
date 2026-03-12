@@ -35,7 +35,7 @@ export class RRM_V2_BaseClient {
         this.channel = channel
         this.ws = new WebSocket("/api/rrm_v2/panel")
         this.ws.addEventListener("open", async (event) => {
-            console.log("Connected to Server")
+            console.info("Connected to Server")
             this.isConnected.value = true
 
             await this.sendMessage('getPermittedChannels', '')
@@ -60,7 +60,7 @@ export class RRM_V2_BaseClient {
             return
         })
         this.ws.addEventListener("close", async (event) => {
-            console.log("Disconnected from Server")
+            console.info("Disconnected from Server")
         })
         this.ws.addEventListener("error", async (event) => {
             console.error(`Connection Error: ${event}`)
@@ -274,12 +274,6 @@ export class RRM_V2_OverlayClient extends RRM_V2_BaseClient {
             return this.getCurrentRequestQueue.value[this.getCurrentSession.value.position]
         }
     })
-
-    // getRequest= computed((index: number) => {
-    //     if (this.getCurrentRequestQueue.value.length > 0 && this.getCurrentSession.value && index >= 0 && index < this.getCurrentRequestQueue.value.length) {
-    //         return this.getCurrentRequestQueue.value[index]
-    //     }
-    // })
 
     getCurrentPosition = computed(() => {
         if (this.getCurrentSession.value) {
