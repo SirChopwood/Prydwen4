@@ -19,7 +19,7 @@ useSeoMeta({
 
 let client = useOverlayClient()
 let route = useRoute()
-let debug = ref(true)
+let debug = ref(false)
 
 onMounted(async () => {
   if (Array.isArray(route.params.channel)) {
