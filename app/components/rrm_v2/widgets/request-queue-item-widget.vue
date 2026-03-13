@@ -154,7 +154,7 @@ function getSourceText() {
           <icon title="Remove" @click="removeRequest" name="mdi:delete-forever"/>
         </div>
       </div>
-      <nuxt-img v-if="item.metadata['Thumbnail']" :src="item.metadata['Thumbnail']" class="-z-10 absolute top-1/2 -translate-y-1/2 right-0 w-1/3 image-opacity-gradient"/>
+      <nuxt-img v-if="item.metadata['Thumbnail']" :src="item.metadata['Thumbnail']" class="-z-10 absolute top-1/2 -translate-y-1/2 right-0 w-1/3 image-opacity-gradient pointer-events-none"/>
     </div>
     <div v-if="selected" class="mx-2 relative rounded-b overflow-clip">
       <div class="absolute inset-0 w-full h-full stripes-scroller -z-10 bg-repeat"/>
