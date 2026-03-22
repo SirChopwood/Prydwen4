@@ -287,6 +287,7 @@ export class RRM_V2_OverlayClient extends RRM_V2_BaseClient {
 
     override async processMessage(type: string, value: any) {
         let success = await super.processMessage(type, value)
+        // Force the current session to the first found Active session
         if (type === "getActiveSessions" && success) {
             let keys = Object.keys(this.activeSessions.value)
             if (keys.length > 0) {

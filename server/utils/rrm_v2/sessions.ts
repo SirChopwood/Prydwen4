@@ -137,7 +137,6 @@ export async function fetchChannelSessions(channelId: string) {
     if (sessionQuery && sessionQuery[0] !== null) {
         session = sessionQuery
     }
-    console.log("search result", session)
     return session
 }
 
