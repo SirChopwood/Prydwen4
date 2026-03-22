@@ -251,7 +251,7 @@ export class RRM_V2_PanelServer extends RRM_V2_BaseServer{
 //                                                                  ███
 export class RRM_V2_OverlayServer extends RRM_V2_BaseServer {
     constructor(peer: Peer) {
-        super(peer, "Panel")
+        super(peer, "Overlay")
     }
 
     async processMessage(type: string, value: any) {

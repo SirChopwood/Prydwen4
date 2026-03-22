@@ -1,22 +1,22 @@
 import type {Peer} from "crossws";
-import {RRM_V2_PanelServer} from "#server/utils/rrm_v2/server";
+import {RRM_V2_OverlayServer} from "#server/utils/rrm_v2/server";
 
 interface RRM_V2_Peer extends Peer {
     context: {
-        server?: RRM_V2_PanelServer,
+        server?: RRM_V2_OverlayServer,
         updateTimer?: NodeJS.Timeout
     }
 }
 
 export default defineWebSocketHandler({
     async upgrade(request) {
-        await requireUserSession(request)
         console.log("Connection Upgrading...")
     },
 
     async open(peer: RRM_V2_Peer) {
-        peer.context.server = new RRM_V2_PanelServer(peer)
+        peer.context.server = new RRM_V2_OverlayServer(peer)
         console.log("Connection Opened")
+        // Keep timer here to prevent issue of Durable Object closing as it scans for any Timers set in the main handler, not Classes.
         peer.context.updateTimer = setInterval(async () => {
             await peer.context.server!.updateCurrentSession()
         }, 15 * 1000)

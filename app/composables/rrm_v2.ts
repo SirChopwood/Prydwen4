@@ -9,7 +9,7 @@ import type {User} from "#auth-utils";
 //     ██▄▄▄▄██  ██▄▄▄███  █▄▄▄▄▄██  ▀██▄▄▄▄█
 //     ▀▀▀▀▀▀▀    ▀▀▀▀ ▀▀   ▀▀▀▀▀▀     ▀▀▀▀▀
 export function useBaseClient() {
-    return new RRM_V2_BaseClient("Base", "/api/rrm_v2/panel")
+    return new RRM_V2_BaseClient("Base", "/api/rrm_v2/websocket/panel")
 }
 
 export class RRM_V2_BaseClient {
@@ -40,7 +40,6 @@ export class RRM_V2_BaseClient {
             console.info("Connected to Server")
             this.isConnected.value = true
 
-            await this.sendMessage('getPermittedChannels', '')
             await this.sendMessage('getActiveSessions', {channel: this.channel})
 
             this.uptimeTimer = setInterval(async () => {
@@ -186,8 +185,13 @@ export class RRM_V2_PanelClient extends RRM_V2_BaseClient{
     channels: Ref<Record<string, RRM_V2_TwitchChannel>> = ref({}) // converts IDs to channel info
 
     constructor(modalManager: ModalManager) {
-        super("Panel", "/api/rrm_v2/panel")
+        super("Panel", "/api/rrm_v2/websocket/panel")
         this.modalManager = modalManager
+    }
+
+    override async connectToServer(channel: string) {
+        await super.connectToServer(channel)
+        await this.sendMessage('getPermittedChannels', '')
     }
 
     override async processMessage(type: string, value: any) {
@@ -265,7 +269,7 @@ export function useOverlayClient() {
 
 export class RRM_V2_OverlayClient extends RRM_V2_BaseClient {
     constructor() {
-        super("Overlay", "/api/rrm_v2/overlay")
+        super("Overlay", "/api/rrm_v2/websocket/overlay")
     }
 
     getCurrentRequest = computed(() => {
