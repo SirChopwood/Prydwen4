@@ -26,9 +26,15 @@ export class RRM_V2_BaseClient {
     pingDownload: Ref<number> = ref(-1)
     isConnected: Ref<boolean> = ref(false)
     socketPath: string
+    enableSessionRecall: boolean
 
-    constructor(type: string, socketPath: string) {
+    constructor(
+        type: string,
+        socketPath: string,
+        enableSessionRecall: boolean = false
+    ) {
         this.socketPath = socketPath
+        this.enableSessionRecall = enableSessionRecall
         console.log(`RRM V2 ${type} Client`)
     }
 
@@ -37,18 +43,7 @@ export class RRM_V2_BaseClient {
         this.channel = channel
         this.ws = new WebSocket(this.socketPath)
         this.ws.addEventListener("open", async (event) => {
-            console.info("Connected to Server")
-            this.isConnected.value = true
-
-            await this.sendMessage('getActiveSessions', {channel: this.channel})
-
-            this.uptimeTimer = setInterval(async () => {
-                await this.updateUptime()
-            }, 500)
-
-            this.heartbeatTimer = setInterval(async () => {
-                await this.sendMessage('heartbeat', {client: new Date().getTime()})
-            }, 2000)
+            await this.postConnectToServer()
         })
 
         this.ws.addEventListener("message", async (event) => {
@@ -65,6 +60,21 @@ export class RRM_V2_BaseClient {
         })
     }
 
+    async postConnectToServer() {
+        console.info("Connected to Server")
+        this.isConnected.value = true
+
+        await this.sendMessage('getActiveSessions', {channelId: this.channel})
+
+        this.uptimeTimer = setInterval(async () => {
+            await this.updateUptime()
+        }, 500)
+
+        this.heartbeatTimer = setInterval(async () => {
+            await this.sendMessage('heartbeat', {client: new Date().getTime()})
+        }, 2000)
+    }
+
     async processMessage(type: string, value: any) {
         console.debug(`Processing Message: ${type}`)
         try {
@@ -76,15 +86,16 @@ export class RRM_V2_BaseClient {
                     console.debug(`Received Heartbeat (${this.pingUpload.value}ms | ${this.pingDownload.value}ms)`)
                     return true
                 case "getActiveSessions":
+                    console.log(value)
                     if (value) {
                         this.activeSessions.value = {}
                         for (const session of JSON.parse(value)) {
                             this.activeSessions.value[session.id] = session
                         }
-                        if (this.currentSessionId.value === -1) {
+                        if (this.currentSessionId.value === -1 && this.enableSessionRecall) {
                             let savedSessionId = localStorage.getItem("RRM_V2_CurrentSessionId")
-                            if (Number(savedSessionId)) {
-                                console.info(`Loading saved Session ID: ${savedSessionId}`)
+                            if (savedSessionId && Number(savedSessionId) && Object.keys(this.activeSessions.value).includes(savedSessionId)) {
+                                console.info(`Loading saved Session ID: ${savedSessionId} (Started: ${this.activeSessions.value[savedSessionId]!.startTime})`)
                                 await this.setCurrentSession(Number(savedSessionId))
                             }
                         }
@@ -136,6 +147,9 @@ export class RRM_V2_BaseClient {
     async setCurrentSession(sessionId: number) {
         this.currentSessionId.value = sessionId
         await this.sendMessage("setCurrentSession", {sessionId: sessionId})
+        if (this.enableSessionRecall) {
+            localStorage.setItem("RRM_V2_CurrentSessionId", String(sessionId))
+        }
     }
 
     getCurrentSession = computed(() => {
@@ -185,12 +199,16 @@ export class RRM_V2_PanelClient extends RRM_V2_BaseClient{
     channels: Ref<Record<string, RRM_V2_TwitchChannel>> = ref({}) // converts IDs to channel info
 
     constructor(modalManager: ModalManager) {
-        super("Panel", "/api/rrm_v2/websocket/panel")
+        super("Panel", "/api/rrm_v2/websocket/panel", true)
         this.modalManager = modalManager
     }
 
     override async connectToServer(channel: string) {
         await super.connectToServer(channel)
+    }
+
+    override async postConnectToServer() {
+        await super.postConnectToServer()
         await this.sendMessage('getPermittedChannels', '')
     }
 
@@ -248,11 +266,6 @@ export class RRM_V2_PanelClient extends RRM_V2_BaseClient{
         await this.sendMessage("fetchChannel", {channel: channel})
         return
     }
-
-    override async setCurrentSession(sessionId: number) {
-        await super.setCurrentSession(sessionId)
-        localStorage.setItem("RRM_V2_CurrentSessionId", String(sessionId))
-    }
 }
 
 //       ▄▄▄▄                                  ▄▄▄▄
@@ -270,6 +283,17 @@ export function useOverlayClient() {
 export class RRM_V2_OverlayClient extends RRM_V2_BaseClient {
     constructor() {
         super("Overlay", "/api/rrm_v2/websocket/overlay")
+    }
+
+    override async processMessage(type: string, value: any) {
+        let success = await super.processMessage(type, value)
+        if (type === "getActiveSessions" && success) {
+            let keys = Object.keys(this.activeSessions.value)
+            if (keys.length > 0) {
+                await this.setCurrentSession(this.activeSessions.value[keys[0]!]!.id)
+            }
+        }
+        return success
     }
 
     getCurrentRequest = computed(() => {

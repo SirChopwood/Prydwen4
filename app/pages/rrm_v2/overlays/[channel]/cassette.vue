@@ -75,8 +75,11 @@ let tapeRowValues = computed(() => {
 </script>
 
 <template>
-  <div v-if="debug" class="bg-black m-4">
-    <div class="text-red-500">channel: {{ client.channel }}</div>
+  <button class="opacity-0 w-10 h-10" @click="debug = !debug">TOGGLE DEBUG</button>
+  <div v-if="debug" class="bg-black m-4 rounded p-2 w-fit h-fit font-jetbrains text-sm">
+    <div class="text-white text-lg font-bold underline">DEBUG</div>
+    <div class="text-pink-500">channel (path param): {{ route.params.channel }}</div>
+    <div class="text-red-500">channel (client): {{ client.channel }}</div>
     <div class="text-orange-500">connected: {{ client.ws?.readyState === client.ws?.OPEN }}</div>
     <div class="text-amber-500">current session: {{client.getCurrentSession.value}}</div>
     <div class="text-green-500 text-xs">current queue: {{client.getRequestQueue.value}}</div>
@@ -88,7 +91,7 @@ let tapeRowValues = computed(() => {
       <nuxt-img src="/images/rrm/overlays/cassette/PlayerOverlay.png" class="absolute w-full z-20"></nuxt-img>
       <div v-if="client.getCurrentRequest.value">
         <div v-if="client.getRequestQueue.value.length > 0" class="absolute size-28 left-16 top-10 -ml-1 -mt-1 z-10 overflow-clip rounded-full ">
-          <img v-if="client.getCurrentRequest.value!.metadata!.Thumbnail" :src="client.getCurrentRequest.value!.metadata!.Thumbnail" class="record"/>
+          <img v-if="client.getCurrentRequest.value!.metadata!['Thumbnail']" :src="client.getCurrentRequest.value!.metadata!.Thumbnail" class="record"/>
         </div>
 
         <div class="absolute right-2.5 top-6 -z-10">

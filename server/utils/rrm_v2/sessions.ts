@@ -109,25 +109,35 @@ export async function fetchActiveSessions() {
 
 
 /**
- * Fetch a session by its ID or a Twitch Channel ID.
- * @param {number} channelId - Twitch Channel ID
+ * Fetch the sessions of a Twitch Channel ID or Name.
+ * @param {number} channelId - Twitch Channel ID or Name
  * @returns {Array<typeof schema.RRM_V2_Sessions.$inferSelect>} - Session Info
  */
 export async function fetchChannelSessions(channelId: string) {
     if (!channelId) {return []}
 
+    let query = channelId
+
+    // Convert Channel Names into IDs if one was given
+    if (isNaN(Number(channelId))) {
+        let channel = await fetchChannelInfo(channelId)
+        if (channel) {
+            query = channel.id
+        }
+    }
+
     let session: Array<typeof schema.RRM_V2_Sessions.$inferSelect> = []
 
     let sessionQuery = await db.select().from(schema.RRM_V2_Sessions).where(
         and(
-            sql`(SELECT 1 FROM json_each(channels) WHERE (value = ${channelId}))`, // Iterate through channels to see if one matches
+            sql`(SELECT 1 FROM json_each(channels) WHERE (value = ${query}))`, // Iterate through channels to see if one matches
             ne(schema.RRM_V2_Sessions.sessionState, "Closed")
         )
     )
     if (sessionQuery && sessionQuery[0] !== null) {
         session = sessionQuery
     }
-
+    console.log("search result", session)
     return session
 }
 
