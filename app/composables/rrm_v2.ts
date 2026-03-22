@@ -9,7 +9,7 @@ import type {User} from "#auth-utils";
 //     ██▄▄▄▄██  ██▄▄▄███  █▄▄▄▄▄██  ▀██▄▄▄▄█
 //     ▀▀▀▀▀▀▀    ▀▀▀▀ ▀▀   ▀▀▀▀▀▀     ▀▀▀▀▀
 export function useBaseClient() {
-    return new RRM_V2_BaseClient()
+    return new RRM_V2_BaseClient("Base", "/api/rrm_v2/panel")
 }
 
 export class RRM_V2_BaseClient {
@@ -25,15 +25,17 @@ export class RRM_V2_BaseClient {
     pingUpload: Ref<number> = ref(-1)
     pingDownload: Ref<number> = ref(-1)
     isConnected: Ref<boolean> = ref(false)
+    socketPath: string
 
-    constructor(type: string = "Base") {
+    constructor(type: string, socketPath: string) {
+        this.socketPath = socketPath
         console.log(`RRM V2 ${type} Client`)
     }
 
     async connectToServer(channel: string) {
         if (this.ws) {return}
         this.channel = channel
-        this.ws = new WebSocket("/api/rrm_v2/panel")
+        this.ws = new WebSocket(this.socketPath)
         this.ws.addEventListener("open", async (event) => {
             console.info("Connected to Server")
             this.isConnected.value = true
@@ -61,9 +63,6 @@ export class RRM_V2_BaseClient {
         })
         this.ws.addEventListener("close", async (event) => {
             console.info("Disconnected from Server")
-        })
-        this.ws.addEventListener("error", async (event) => {
-            console.error(`Connection Error: ${event}`)
         })
     }
 
@@ -187,7 +186,7 @@ export class RRM_V2_PanelClient extends RRM_V2_BaseClient{
     channels: Ref<Record<string, RRM_V2_TwitchChannel>> = ref({}) // converts IDs to channel info
 
     constructor(modalManager: ModalManager) {
-        super("Panel")
+        super("Panel", "/api/rrm_v2/panel")
         this.modalManager = modalManager
     }
 
@@ -266,7 +265,7 @@ export function useOverlayClient() {
 
 export class RRM_V2_OverlayClient extends RRM_V2_BaseClient {
     constructor() {
-        super("Overlay")
+        super("Overlay", "/api/rrm_v2/overlay")
     }
 
     getCurrentRequest = computed(() => {

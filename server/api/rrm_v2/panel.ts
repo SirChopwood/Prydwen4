@@ -11,6 +11,7 @@ interface RRM_V2_Peer extends Peer {
 export default defineWebSocketHandler({
     async upgrade(request) {
         await requireUserSession(request)
+        console.log("Connection Upgrading...")
     },
 
     async open(peer: RRM_V2_Peer) {
