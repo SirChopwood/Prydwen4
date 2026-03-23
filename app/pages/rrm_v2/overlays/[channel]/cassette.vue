@@ -91,17 +91,17 @@ let tapeRowValues = computed(() => {
       <nuxt-img src="/images/rrm/overlays/cassette/PlayerOverlay.png" class="absolute w-full z-20"></nuxt-img>
       <div v-if="client.getCurrentRequest.value">
         <div v-if="client.getRequestQueue.value.length > 0" class="absolute size-28 left-16 top-10 -ml-1 -mt-1 z-10 overflow-clip rounded-full ">
-          <img v-if="client.getCurrentRequest.value!.metadata!['Thumbnail']" :src="client.getCurrentRequest.value!.metadata!.Thumbnail" class="record"/>
+          <img v-if="client.getCurrentRequest.value!.metadata!['Thumbnail']" :src="client.getCurrentRequest.value!.metadata!['Thumbnail']" class="h-full aspect-square animate-spin" style="animation-duration: 4s"/>
         </div>
 
         <div class="absolute right-2.5 top-6 -z-10">
           <cassette_tape :song="client.getCurrentRequest.value" class=""></cassette_tape>
         </div>
 
-        <div class="right-2 bottom-10 absolute flex-col w-44 h-10 pr-1 pt-1 text-green-400 inconsolata leading-3 text-lg line text-nowrap z-10">
-          <div class="overflow-hidden flex flex-row h-8 ticker-tape-container">
-            <div class="ticker-tape">{{client.getCurrentRequest.value!.text}}</div>
-            <div class="ticker-tape" aria-hidden="true">{{client.getCurrentRequest.value!.text}}</div>
+        <div class="right-2 bottom-10 absolute flex-col w-44 h-10 pr-1 pt-1 text-green-400 font-jetbrains leading-3 text-base line text-nowrap z-10">
+          <div class="overflow-hidden flex flex-row h-8 overflow-x-clip pt-3">
+              <div class="animate-marquee">{{client.getCurrentRequest.value!.text}}&nbsp;|&nbsp;</div>
+              <div class="animate-marquee">{{client.getCurrentRequest.value!.text}}&nbsp;|&nbsp;</div>
           </div>
           <div class="flex flex-row flex-nowrap">
             {{getCurrentScreenDisplay.title}}
@@ -136,90 +136,24 @@ let tapeRowValues = computed(() => {
   </div>
 
   <div class="fixed inset-x-96 -bottom-12 h-32 flex flex-row overflow-visible justify-center">
-    <cassette_tape v-for="song of tapeRowValues" :song="song" class="-mx-2" :style="`rotate: ${((song!.text.length%20)-10)*1.2}deg`"/>
+    <transition-group name="tapes">
+      <cassette_tape v-for="song of tapeRowValues" :song="song" :key="song!.id" class="-mx-2" :style="`rotate: ${((song!.text.length%20)-10)*1.2}deg`"/>
+    </transition-group>
   </div>
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
-.inconsolata {
-  font-family: "Inconsolata", monospace;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-      "wdth" 100;
+.tapes-move,
+.tapes-enter-active,
+.tapes-leave-active {
+  transition: all 2s ease;
 }
-
-.ticker-tape-container {
-  overflow-x: hidden;
-  display: flex;
+.tapes-enter-from,
+.tapes-leave-to {
+  opacity: 0;
+  transform: translateY(100%);
 }
-.ticker-tape {
-  --direction: normal;
-  --duration: 15s;
-  --delay: 0s;
-  --iteration-count: infinite;
-  --play: running;
-  display: flex;
-  gap: 1rem;
-  padding-right: 2rem;
-  flex: 0 0 auto;
-  align-items: center;
-  animation: marquee var(--duration) linear var(--delay) var(--iteration-count);
-  animation-play-state: var(--play);
-  animation-delay: var(--delay);
-  animation-direction: var(--direction);
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    30% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-}
-
-.record {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  animation: record-spin 5s linear 0s infinite;
-  @keyframes record-spin {
-    0% {
-      transform: rotate(0deg) scale(130%);
-    }
-    100% {
-      transform: rotate(360deg) scale(130%);
-    }
-  }
-}
-
-.tape-row-enter-active {
-  --direction: normal;
-  --duration: 1s;
-  --delay: 0s;
-  --iteration-count: 1;
-  --play: running;
-  animation: tape-appear-anim var(--duration) linear var(--delay) var(--iteration-count);
-  animation-play-state: var(--play);
-  animation-delay: var(--delay);
-  animation-direction: var(--direction);
-  animation-fill-mode: forwards;
-
-  @keyframes tape-appear-anim {
-    0% {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+.tapes-leave-active {
+  position: absolute;
 }
 </style>

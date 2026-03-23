@@ -21,7 +21,7 @@ function updateRefs(song: any) {
 
 <template>
   <div class="relative">
-    <div class="text-sm relative sour-gummy w-44 h-auto shrink-0">
+    <div class="text-sm relative font-sourgummy w-44 h-auto shrink-0">
       <nuxt-img src="/images/rrm/overlays/cassette/TapeBase.png" class="static" :style="randomHue"/>
       <div class="absolute right-[4%] w-[18%] top-[32%]">
         <nuxt-img :src="song.metadata.Thumbnail" class="object-cover h-full w-full"/>
@@ -39,13 +39,4 @@ function updateRefs(song: any) {
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=&family=Sour+Gummy&display=swap');
-.sour-gummy {
-  font-family: "Sour Gummy", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-      "wdth" 100;
-}
 </style>
