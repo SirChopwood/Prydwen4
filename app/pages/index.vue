@@ -51,8 +51,12 @@ export default defineComponent({
     <div ref="DoSkillTable" class="w-full">
       <div class="font-jetbrains text-2xl text-white mb-2 bg-neutral-950 w-fit py-1 px-4">> What I do <span class="animation-blinker">_</span></div>
       <div class="flex flex-row flex-wrap justify-center gap-4">
-        <skill-card title="Game Development" icon="mdi:gamepad-variant">Designing and prototyping game features. Working in existing game engines to create user facing features.</skill-card>
-        <skill-card title="Technical Art" icon="mdi:palette">Creating visual elements as well as improving the development experience for artists and coders in various fields including games.</skill-card>
+        <skill-card title="Game Development" icon="mdi:gamepad-variant">
+          Designing and prototyping gameplay features and mechanics. Working in existing game engines to create user facing features as well as improving the development experience.
+        </skill-card>
+        <skill-card title="Website Development" icon="mdi:palette">
+          Constructing a clean and responsive website, in fact, it's the one you are viewing right now, built using modern frameworks. Additionally creating development tools and Bots on third party APIs.
+        </skill-card>
       </div>
     </div>
 
@@ -61,6 +65,7 @@ export default defineComponent({
       <div class="flex flex-row flex-wrap justify-center gap-4">
         <skill-card title="Unreal Engine" icon="file-icons:unrealscript">Extremely proficient in using Unreal & blueprinting. Including Replication, Interfaces and Components.</skill-card>
         <skill-card title="Programming Languages" icon="material-symbols:terminal">Able to dig in to whatever languages are required, with history using Lua, Python, C#, HTML/CSS/JS and more.</skill-card>
+        <skill-card title="JavaScript & TypeScript" icon="mdi:git">Developing experience coding for both browsers and via NodeJS. Running Discord Bots, Twitch Chatbots and Websites.</skill-card>
         <skill-card title="3D Asset Pipeline" icon="file-icons:blender">Experienced with tools such as Blender and Substance Painter, using High/Low Poly baking, Rigging, Texturing etc.</skill-card>
         <skill-card title="VCS & Management" icon="mdi:git">Proven knowledge of version control software for both small and large scale projects and documentation tools like Jira and Confluence.</skill-card>
       </div>
@@ -77,12 +82,6 @@ export default defineComponent({
                          :thumbnail="project.thumbnail"
                          :project-tags="project.tags"
           />
-          <projects-card title="Rami's Request Manager"
-                         thumbnail="/images/projects/external/rrm.png"
-                         link="/rrm_v2"
-                         :project-tags="['External Link', 'Open Source', 'Solo', 'JS/Node']">
-            A twitch panel and overlay for managing chat based interaction, such as song requests for DJs.
-          </projects-card>
           <projects-card title="Ramiris' Heresy"
                          thumbnail="/images/projects/external/ramiris_heresy.png"
                          link="https://steamcommunity.com/sharedfiles/filedetails/?id=2167631151"
