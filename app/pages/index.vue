@@ -54,7 +54,7 @@ export default defineComponent({
         <skill-card title="Game Development" icon="mdi:gamepad-variant">
           Designing and prototyping gameplay features and mechanics. Working in existing game engines to create user facing features as well as improving the development experience.
         </skill-card>
-        <skill-card title="Website Development" icon="mdi:palette">
+        <skill-card title="Website Development" icon="mdi:code-block-tags">
           Constructing a clean and responsive website, in fact, it's the one you are viewing right now, built using modern frameworks. Additionally creating development tools and Bots on third party APIs.
         </skill-card>
       </div>
@@ -65,7 +65,7 @@ export default defineComponent({
       <div class="flex flex-row flex-wrap justify-center gap-4">
         <skill-card title="Unreal Engine" icon="file-icons:unrealscript">Extremely proficient in using Unreal & blueprinting. Including Replication, Interfaces and Components.</skill-card>
         <skill-card title="Programming Languages" icon="material-symbols:terminal">Able to dig in to whatever languages are required, with history using Lua, Python, C#, HTML/CSS/JS and more.</skill-card>
-        <skill-card title="JavaScript & TypeScript" icon="mdi:git">Developing experience coding for both browsers and via NodeJS. Running Discord Bots, Twitch Chatbots and Websites.</skill-card>
+        <skill-card title="JavaScript & TypeScript" icon="mdi:language-typescript">Developing experience coding for both browsers and via NodeJS. Running Discord Bots, Twitch Chatbots and Websites.</skill-card>
         <skill-card title="3D Asset Pipeline" icon="file-icons:blender">Experienced with tools such as Blender and Substance Painter, using High/Low Poly baking, Rigging, Texturing etc.</skill-card>
         <skill-card title="VCS & Management" icon="mdi:git">Proven knowledge of version control software for both small and large scale projects and documentation tools like Jira and Confluence.</skill-card>
       </div>
