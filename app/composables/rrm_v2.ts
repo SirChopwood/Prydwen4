@@ -27,6 +27,7 @@ export class RRM_V2_BaseClient {
     isConnected: Ref<boolean> = ref(false)
     socketPath: string
     enableSessionRecall: boolean
+    sessionTimer: NodeJS.Timeout | undefined
 
     constructor(
         type: string,
@@ -52,7 +53,12 @@ export class RRM_V2_BaseClient {
                 console.warn(`Unknown message: ${msg}`)
                 return
             }
-            await this.processMessage(msg.type, msg.value)
+            try {
+                await this.processMessage(msg.type, msg.value)
+            } catch (e) {
+                console.log("Error caught during message processing.")
+                console.error(e)
+            }
             return
         })
         this.ws.addEventListener("close", async (event) => {
@@ -73,6 +79,20 @@ export class RRM_V2_BaseClient {
         this.heartbeatTimer = setInterval(async () => {
             await this.sendMessage('heartbeat', {client: new Date().getTime()})
         }, 2000)
+
+        // Forces the session list to constantly update if none is found or if the current one isnt valid anymore.
+        this.sessionTimer = setInterval(async () => {
+            if (this.getCurrentSession.value) {
+                if (this.getCurrentSession.value.sessionState === "Open") {
+                    return
+                }
+            }
+            if (this.currentSessionId.value !== -1) {
+                await this.sendMessage("setCurrentSession", {sessionId: -1})
+            }
+            console.log("Searching for Open Sessions...")
+            await this.sendMessage('getActiveSessions', {channelId: this.channel})
+        }, 10000)
     }
 
     async processMessage(type: string, value: any) {

@@ -47,6 +47,9 @@ let screenDisplays: Array<{title: string, value: string}> = [
 ]
 let currentScreenDisplay = ref(0)
 let getCurrentScreenDisplay: ComputedRef<{title: string, value: string}> = computed(() => {
+  if (client.currentSessionId.value === -1) {
+    return {title: "Session: ", value: "Not found!"}
+  }
   const current = screenDisplays[currentScreenDisplay.value % screenDisplays.length]
   switch (current!.value) {
     case "code":
@@ -89,19 +92,19 @@ let tapeRowValues = computed(() => {
   <div class="fixed bottom-0 -left-4 w-96 h-fit">
     <div class="relative">
       <nuxt-img src="/images/rrm/overlays/cassette/PlayerOverlay.png" class="absolute w-full z-20"></nuxt-img>
-      <div v-if="client.getCurrentRequest.value">
-        <div v-if="client.getRequestQueue.value.length > 0" class="absolute size-28 left-16 top-10 -ml-1 -mt-1 z-10 overflow-clip rounded-full ">
+      <div>
+        <div v-if="client.getCurrentRequest.value && client.getRequestQueue.value.length > 0" class="absolute size-28 left-16 top-10 -ml-1 -mt-1 z-10 overflow-clip rounded-full ">
           <img v-if="client.getCurrentRequest.value!.metadata!['Thumbnail']" :src="client.getCurrentRequest.value!.metadata!['Thumbnail']" class="h-full aspect-square animate-spin" style="animation-duration: 4s"/>
         </div>
 
-        <div class="absolute right-2.5 top-6 -z-10">
+        <div v-if="client.getCurrentRequest.value" class="absolute right-2.5 top-6 -z-10">
           <cassette_tape :song="client.getCurrentRequest.value" class=""></cassette_tape>
         </div>
 
         <div class="right-2 bottom-10 absolute flex-col w-44 h-10 pr-1 pt-1 text-green-400 font-jetbrains leading-3 text-base line text-nowrap z-10">
           <div class="overflow-hidden flex flex-row h-8 overflow-x-clip pt-3">
-              <div class="animate-marquee">{{client.getCurrentRequest.value!.text}}&nbsp;|&nbsp;</div>
-              <div class="animate-marquee">{{client.getCurrentRequest.value!.text}}&nbsp;|&nbsp;</div>
+              <div class="animate-marquee">{{client.getCurrentRequest.value ? client.getCurrentRequest.value!.text : "Please insert cassette!"}}&nbsp;|&nbsp;</div>
+              <div class="animate-marquee">{{client.getCurrentRequest.value ? client.getCurrentRequest.value!.text : "Please insert cassette!"}}&nbsp;|&nbsp;</div>
           </div>
           <div class="flex flex-row flex-nowrap">
             {{getCurrentScreenDisplay.title}}

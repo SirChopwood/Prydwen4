@@ -54,6 +54,11 @@ export class RRM_V2_BaseServer {
     }
 
     async setCurrentSession(sessionId: number) {
+        if (sessionId === -1) {
+            this.sessionId = undefined
+            this.session = undefined
+            return true
+        }
         let newSession = await fetchSession(sessionId)
         if (newSession) {
             this.sessionId = sessionId
@@ -157,6 +162,13 @@ export class RRM_V2_PanelServer extends RRM_V2_BaseServer{
 
     async setCurrentSession(sessionId: number) {
         if (await super.setCurrentSession(sessionId)) {
+            if (sessionId === -1 && this.sessionId === undefined) {
+                await this.sendNotification("No Session Found", "red", `No valid, open, session was found... Retrying in 10s...`)
+                return true
+            } else if (sessionId === -1 && this.sessionId !== undefined) {
+                await this.sendNotification("Session Closed", "red", `The current Session has been Closed, searching for new Session.`)
+                return true
+            }
             await this.sendNotification("Current Session Updated", "blue", `The current Session is now set to ID ${this.sessionId}.`)
             return true
         } else {
