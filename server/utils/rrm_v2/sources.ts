@@ -29,12 +29,12 @@ export async function PyPy(request: string) {
         // If Request matches ID or YT URL
         if (String(song.i) === String(request)) {
             requestData.code = String(song.i)
-            requestData.text = song.n
+            requestData.text = song.n ? song.n : String(song.i)
             requestData.metadata["Source"] = "PyPy"
             // @ts-ignore
-            requestData.metadata["Group"] = data.groups[song.g]
-            requestData.metadata["Duration"] = String(song.e)
-            if (song.o[0]) {
+            requestData.metadata["Group"] = data.groups[song.g] ? data.groups[song.g] : "Unknown"
+            requestData.metadata["Duration"] = song.e ? String(song.e) : "Unknown"
+            if (song.o && song.o.length > 0) {
                 try {
                     let videoData = await FetchYouTubeVideo(song.o[0]!)
                     if (videoData.snippet) {
@@ -90,7 +90,6 @@ async function FetchYouTubeVideo(url: string) {
     let ytRequest = ytRegex.exec(url)
     if (!ytRequest) {return undefined}
     if (!ytRequest[1]) {return undefined}
-    console.log(ytRequest[1])
 
     // Login to YT API
     if (!process.env.GOOGLE_AUTH) {return undefined}
