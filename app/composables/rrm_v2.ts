@@ -28,6 +28,7 @@ export class RRM_V2_BaseClient {
     socketPath: string
     enableSessionRecall: boolean
     sessionTimer: NodeJS.Timeout | undefined
+    reconnectTimer: NodeJS.Timeout | undefined
 
     constructor(
         type: string,
@@ -40,9 +41,14 @@ export class RRM_V2_BaseClient {
     }
 
     async connectToServer(channel: string) {
-        if (this.ws) {return}
+        if (this.ws) {return false}
         this.channel = channel
-        this.ws = new WebSocket(this.socketPath)
+        try {
+            this.ws = new WebSocket(this.socketPath)
+        } catch (e) {
+            console.error(e)
+            return false
+        }
         this.ws.addEventListener("open", async (event) => {
             await this.postConnectToServer()
         })
@@ -62,13 +68,15 @@ export class RRM_V2_BaseClient {
             return
         })
         this.ws.addEventListener("close", async (event) => {
-            console.info("Disconnected from Server")
+            await this.onDisconnect(event)
         })
+        return true
     }
 
     async postConnectToServer() {
         console.info("Connected to Server")
         this.isConnected.value = true
+        clearInterval(this.reconnectTimer)
 
         await this.sendMessage('getActiveSessions', {channelId: this.channel})
 
@@ -154,6 +162,26 @@ export class RRM_V2_BaseClient {
         } else {
             this.currentSessionUptime.value = 0
         }
+    }
+
+    async onDisconnect(event: CloseEvent) {
+        console.info("Disconnected from Server")
+        if (this.ws?.OPEN) {
+            this.ws!.close()
+        }
+        this.ws = null
+        this.isConnected.value = false
+        clearInterval(this.heartbeatTimer)
+        clearInterval(this.sessionTimer)
+        clearInterval(this.uptimeTimer)
+        this.reconnectTimer = setInterval(async () => {
+            console.log("Reconnecting...")
+            if (await this.connectToServer(this.channel)) {
+                console.log("Connecting...")
+            } else {
+                console.log("Connection Failed, retrying in 30s...")
+            }
+        }, 30*1000) // Attempt to reconnect every 30s
     }
 
     async disconnectFromServer() {
