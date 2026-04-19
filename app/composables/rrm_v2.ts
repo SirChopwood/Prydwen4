@@ -252,7 +252,7 @@ export class RRM_V2_PanelClient extends RRM_V2_BaseClient{
     }
 
     override async connectToServer(channel: string) {
-        await super.connectToServer(channel)
+        return await super.connectToServer(channel)
     }
 
     override async postConnectToServer() {
