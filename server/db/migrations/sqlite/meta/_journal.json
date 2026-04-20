@@ -15,6 +15,13 @@
       "when": 1771288901650,
       "tag": "0001_empty_ricochet",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1776723623518,
+      "tag": "0002_slim_sharon_carter",
+      "breakpoints": true
     }
   ]
 }
