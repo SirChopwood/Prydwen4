@@ -268,3 +268,35 @@ export async function removeRequest(sessionId: number, index: number) {
     }
     return false
 }
+
+/**
+ * Update the currently active request in the queue.
+ * @returns {boolean} - If the update was successful
+ * @param sessionId
+ * @param channels
+ * @param sources
+ */
+export async function updateSessionDetails(sessionId: number, channels: Array<string>, sources: Array<string>) {
+    if (!sessionId) {return false}
+    let session= await fetchSession(sessionId)
+    if (!session) {return false}
+
+    for (let channel of channels) {
+        let info = await fetchChannelInfo(channel)
+        if (!info) {
+            console.log(`Could not find channel: ${channel}`)
+            return
+        }
+    }
+
+    try {
+        await db.update(schema.RRM_V2_Sessions)
+            .set({channels: channels, sources: sources})
+            .where(eq(schema.RRM_V2_Sessions.id, sessionId))
+            .returning()
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+    return false
+}

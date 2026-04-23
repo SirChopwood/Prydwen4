@@ -1,6 +1,6 @@
 import type {Peer} from "crossws";
 import {fetchChannelInfo, fetchPermittedChannels} from "#server/utils/rrm_v2/users";
-import {fetchChannelSessions} from "#server/utils/rrm_v2/sessions";
+import {fetchChannelSessions, updateSessionDetails} from "#server/utils/rrm_v2/sessions";
 
 //     ▄▄▄▄▄▄
 //     ██▀▀▀▀██
@@ -142,6 +142,9 @@ export class RRM_V2_PanelServer extends RRM_V2_BaseServer{
                     case "createRequest":
                         await this.createRequest(value.user, value.codes)
                         break
+                    case "updateSessionDetails":
+                        await this.updateSessionDetails(value.channels, value.sources)
+                        break
                     default:
                         return false
                 }
@@ -249,6 +252,14 @@ export class RRM_V2_PanelServer extends RRM_V2_BaseServer{
             }
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    async updateSessionDetails(channels: Array<string>, sources: Array<string>) {
+        let success = await updateSessionDetails(this.sessionId!, channels, sources)
+        if (success) {
+            await this.updateCurrentSession()
+            await this.sendNotification("Session Updated", "blue", `Updated Session Details for ID ${this.sessionId}.`)
         }
     }
 }

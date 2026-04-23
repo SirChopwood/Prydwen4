@@ -16,6 +16,10 @@ const props = defineProps({
   client: {
     type: RRM_V2_PanelClient,
     required: true
+  },
+  existingSession: {
+    type: Object,
+    required: false
   }
 })
 
@@ -27,6 +31,10 @@ let disabledControls: Ref<boolean> = ref(true)
 onMounted(async () => {
   await props.client.sendMessage('getPermittedChannels', '')
   disabledControls.value = false
+  if (props.existingSession && props.existingSession.id) {
+    tickedSources.value = props.existingSession.sources
+    tickedChannels.value = props.existingSession.channels
+  }
 })
 
 let sessionValid = computed(() => {
@@ -41,11 +49,20 @@ async function createSession() {
     channelList.push(props.client.user!.id)
   }
 
-  await props.client.sendMessage('createSession', {
-    hostId: props.client.user!.id,
-    channels: channelList,
-    sources: tickedSources.value,
-  })
+  if (props.existingSession && props.existingSession.id) {
+    await props.client.sendMessage('updateSessionDetails', {
+      sessionId: props.existingSession.id,
+      channels: channelList,
+      sources: tickedSources.value,
+    })
+  } else {
+    await props.client.sendMessage('createSession', {
+      hostId: props.client.user!.id,
+      channels: channelList,
+      sources: tickedSources.value,
+    })
+  }
+
   await props.modalManager.hideModal(props.name)
 }
 </script>

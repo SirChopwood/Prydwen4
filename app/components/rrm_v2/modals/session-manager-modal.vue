@@ -38,6 +38,12 @@ function getTimeSinceCreation() {
 onMounted(async () => {
   props.client.sendMessage('getActiveSessions', {channelId: props.client.user!.id})
 })
+
+async function openEditModal() {
+  if( selectionSession() ){
+    props.modalManager.showModal(`Edit an Existing Session (ID: ${selectionSession()!.id})`, SessionCreationModal, {client: props.client, existingSession: selectionSession()})
+  }
+}
 </script>
 
 <template>
@@ -57,6 +63,9 @@ onMounted(async () => {
         </select>
         <generic-button colour="blue" title="Refresh Current Sessions" @click="props.client.sendMessage('getActiveSessions', {channelId: client.user!.id})">
           <icon name="mdi:sync" class="text-xl inline align-middle -mx-4 translate-x-1.5"/>
+        </generic-button>
+        <generic-button colour="yellow" title="Edit an Existing Session" @click="openEditModal()" :disabled="!selectionSession()">
+          Edit
         </generic-button>
       </div>
     </div>

@@ -8,6 +8,10 @@ const buttonClasses: Record<string, Array<string>> = {
   neutral: ["outline-neutral-600", "hover:bg-neutral-700", "text-neutral-400", "hover:text-neutral-200"]
 }
 const props = defineProps({
+  disabled: {
+    type: Boolean,
+    required: false,
+  },
   colour: {
     type: String,
     required: true,
@@ -33,7 +37,7 @@ async function updateColour() {
     button.value!.classList.remove(style)
   })
 
-  if (!colour || !Object.keys(buttonClasses).includes(colour)) {
+  if (!colour || !Object.keys(buttonClasses).includes(colour) || props.disabled) {
     colour = "neutral"
   } else {
     colour = props.colour
@@ -46,7 +50,7 @@ async function updateColour() {
 </script>
 
 <template>
-  <div ref="button" class="py-1 px-4 hover:outline-2 bg-neutral-900 outline transition-all duration-200 cursor-pointer rounded flex flex-row items-center gap-2">
+  <div ref="button" class="py-1 px-4 hover:outline-2 bg-neutral-900 outline transition-all duration-200 cursor-pointer rounded flex flex-row items-center gap-2 disabled:outline-neutral-600 disabled:hover:bg-neutral-700 disabled:text-neutral-400 disabled:hover:text-neutral-200 disabled:cursor-not-allowed">
     <slot></slot>
   </div>
 </template>
