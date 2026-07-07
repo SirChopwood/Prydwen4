@@ -23,6 +23,10 @@ export const Teams_V2_Teams = sqliteTable("Teams_V2_Teams", {
         .notNull()
         .default(""),
 
+    icon_url: text("icon_url")
+        .notNull()
+        .default(""),
+
     score: integer()
         .notNull()
         .default(0),
