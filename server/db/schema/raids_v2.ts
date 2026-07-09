@@ -1,8 +1,11 @@
 import {integer, sqliteTable, text} from "drizzle-orm/sqlite-core";
 
 export const Raids_V2_Users = sqliteTable("Raids_V2_Users", {
+    id: integer("id")
+        .primaryKey({ autoIncrement: true }),
+
     user_id: text("user_id")
-        .primaryKey(),
+        .notNull(),
 
     raid_id: integer("raid_id")
         .notNull(),

@@ -29,6 +29,27 @@
       "when": 1783390553304,
       "tag": "0003_watery_sentinels",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1783563297224,
+      "tag": "0004_complete_shard",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1783563528754,
+      "tag": "0005_grey_crystal",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1783563544382,
+      "tag": "0006_milky_salo",
+      "breakpoints": true
     }
   ]
 }
