@@ -211,7 +211,7 @@ async function updateTeamData() {
     <transition name="scoreboard">
       <div ref="Scoreboard" v-if="getCurrentTeam()" class="fixed bottom-0 right-0 w-96 h-52">
         <nuxt-img src="/images/modcorp/campneko/ScoreboardBackground2.png" class="absolute bottom-0 right-0"/>
-        <div class="absolute top-16 -mt-1 right-6 w-28 h-8 -skew-x-12 opacity-80 text-center text-2xl content-center" :style="'color: '+getCurrentTeam()!.colour">
+        <div class="absolute top-16 -mt-1 right-6 w-28 h-8 -skew-x-12 opacity-80 text-center text-3xl content-center" :style="'color: '+getCurrentTeam()!.colour">
           {{getCurrentTeam()!.name}}
         </div>
         <img :src="getCurrentTeam()!.icon_url" class="absolute bottom-3 left-2 size-5 skew-y-6 -skew-x-12 opacity-80"/>
