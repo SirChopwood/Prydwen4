@@ -64,8 +64,8 @@ export const Raids_V2_Raids = sqliteTable("Raids_V2_Raids", {
             }
             timer: {
                 mode: "None" | "Encounter" | "Paused"
-                start?: Date,
-                end?: Date
+                start?: number,
+                end?: number
             }
         }>()
         .default({
