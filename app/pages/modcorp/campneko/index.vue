@@ -201,11 +201,10 @@ async function updateTeamData() {
       </div>
     </transition>
     <transition name="timer">
-      <div ref="Timer" v-if="overlayData.timer.mode !== 'None'" class="fixed bottom-0 left-0 w-60 h-40">
+      <div ref="Timer" v-if="overlayData.timer.mode !== 'None'" class="fixed -bottom-8 left-0 w-60 h-40">
         <nuxt-img src="/images/modcorp/campneko/TimerBackground.png" class="absolute bottom-0 left-0"/>
-        <div v-if="timerRemainder.ms > 0" class="text-white text-5xl">
-          {{timerRemainder.m}} : {{timerRemainder.s}}
-        </div>
+        <div v-if="timerRemainder.ms > 0" class="font-playpen text-5xl text-white skew-x-6 absolute bottom-10 left-4 text-center">{{timerRemainder.m}}</div>
+        <div v-if="timerRemainder.ms > 0" class="font-playpen text-5xl text-white skew-x-6 absolute bottom-12 left-32 -ml-1 -mb-1 text-center">{{timerRemainder.s}}</div>
       </div>
     </transition>
     <transition name="scoreboard">
@@ -230,7 +229,7 @@ async function updateTeamData() {
 <!--      </div>-->
 <!--    </transition>-->
     <transition name="mimis">
-      <div ref="Mimis" v-show="overlayData.timer.mode !== 'None'" class="fixed bottom-0 left-64 right-64 h-32">
+      <div ref="Mimis" v-show="overlayData.timer.mode !== 'None'" class="fixed bottom-0 left-64 right-96 h-32">
         <nuxt-img src="/images/modcorp/campneko/MimiStart.png" class="absolute bottom-0 left-0 h-32"/>
         <nuxt-img src="/images/modcorp/campneko/MimiEnd.png" class="absolute bottom-0 right-0 h-32"/>
         <div class="absolute bottom-0 left-12 right-14 h-24">
